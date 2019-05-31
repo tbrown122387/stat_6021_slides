@@ -1,0 +1,7 @@
+---
+title: Module 7
+subtitle: STAT 6021
+author: Taylor R. Brown, PhD
+output: slidy_presentation
+---
+

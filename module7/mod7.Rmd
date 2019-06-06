@@ -5,3 +5,336 @@ author: Taylor R. Brown, PhD
 output: slidy_presentation
 ---
 
+## Motivation 
+
+Now we talk about *variable selection* which is like *model selection* as long as we're restricting ourselves to regression models.
+
+So far we've assumed we more-or-less know which predictors we'll use.
+
+We fit the full model, do an overall F test, maybe run one or two t-tests, check the residuals, maybe transform predictors and/or $y$, and then finish off with another check of all our assumptions.
+
+What if you have no scientific knowledge of the problem, just a `.csv` file?
+
+
+## Motivation 
+
+Q: If you have $k$ predictors, how many possible models are there?
+
+## Motivation 
+
+A: 
+
+- If you know there's an intercept: $2^{k}$ 
+
+- If you don't know about the intercept: $2^{k+1}$
+
+- If you start making more predictors by using interactions and/or powers ...
+
+Multicollinearity tends to be lurking close by in this type of situation. Removing variables can help with this. 
+
+We also talked about how residuals can signify variable omissions.
+
+## Questions you should be asking
+
+1. Should I err on the side of a small model (underfitting), or should I aim for a model with a large number of predictors (overfitting)?
+
+2. Is my goal parameter inference, or prediction?
+
+
+## Bias and Variances and Covariances
+
+The *bias* of an estimate $\hat{\boldsymbol{\beta}}$ for a parameter vector $\boldsymbol{\beta}$ is
+$$
+E[\hat{\boldsymbol{\beta}} - \boldsymbol{\beta}].
+$$
+
+The *covariance matrix* is importance as well:
+$$
+V[\hat{\boldsymbol{\beta}}] = E\left\{\left(\hat{\boldsymbol{\beta}} - \boldsymbol{\beta}\right)\left(\hat{\boldsymbol{\beta}} - \boldsymbol{\beta}\right)^\intercal \right\}.
+$$
+
+
+## Which error measure?
+
+Q: Bias is bad, and variance is bad. But which one do you we look at?
+
+
+## Mean Square Error (MSE)
+
+A: We look at a combination: mean squared error.
+
+\begin{align*}
+MSE(\hat{\boldsymbol{\beta}}_p) &= E[(\hat{\boldsymbol{\beta}}_p - \boldsymbol{\beta}_p)(\hat{\boldsymbol{\beta}}_p - \boldsymbol{\beta}_p)^\intercal] \tag{defn.}\\
+&= E[(\hat{\boldsymbol{\beta}}_p \pm E[\hat{\boldsymbol{\beta}}_p] - \boldsymbol{\beta}_p)(\hat{\boldsymbol{\beta}}_p \pm E[\hat{\boldsymbol{\beta}}_p] - \boldsymbol{\beta}_p)^\intercal] \\
+&= E[(\hat{\boldsymbol{\beta}}_p^\intercal - E[\hat{\boldsymbol{\beta}}_p^\intercal])(\hat{\boldsymbol{\beta}}_p^\intercal - E[\hat{\boldsymbol{\beta}}_p^\intercal])^\intercal] \\
+&\hspace{10mm} E[(E[\hat{\boldsymbol{\beta}}_p^\intercal] - \beta_p)(E[\hat{\boldsymbol{\beta}}_p^\intercal] - \beta_p)^\intercal] \\
+&\hspace{5mm} + 2E[(\hat{\boldsymbol{\beta}}_p^\intercal - E[\hat{\boldsymbol{\beta}}_p^\intercal])(E[\hat{\boldsymbol{\beta}}_p^\intercal] - \beta_p)^\intercal] \\
+&= V[\hat{\boldsymbol{\beta}}_p] + \text{Bias}[\hat{\boldsymbol{\beta}}_p]\text{Bias}[\hat{\boldsymbol{\beta}}_p]^\intercal + 0 \tag{fundamental!}
+\end{align*}
+
+
+
+## Positive Semi-Definiteness
+
+What does it mean when we say one matrix is bigger than or equal to another?
+
+$$
+\mathbf{M}_1 \ge \mathbf{M}_2
+$$
+
+
+## Positive Semi-Definiteness
+
+This
+
+$$
+\mathbf{M}_1 \ge \mathbf{M}_2
+$$
+
+is short hand for this
+
+$$
+\mathbf{M}_1 - \mathbf{M}_2 \text{ is positve semi-definite}.
+$$
+
+
+A matrix $\mathbf{A}$ is positive semi-definite if for all possible vectors $\mathbf{c}$ (such that not all the elements are $0$) we have
+$$
+\mathbf{c}^\intercal \mathbf{A} \mathbf{c} \ge 0.
+$$
+
+
+
+
+## Positive Semi-Definiteness
+
+<!-- A linear combination estimator of $\hat{\boldsymbol{\beta}}_p$ has not bigger variance because $V[\hat{\boldsymbol{\beta}}^*_p] - V[\hat{\boldsymbol{\beta}}_p]$ is positive semi-definite. That means for -->
+
+Assume for every $\mathbf{c}$ (assuming not all elements are $0$)
+
+$$
+V[\mathbf{c}^\intercal\hat{\boldsymbol{\beta}}^*_p] \ge V[\mathbf{c}^\intercal\hat{\boldsymbol{\beta}}_p]
+$$
+this is true iff
+$$
+\mathbf{c}^\intercal V[\hat{\boldsymbol{\beta}}^*_p]\mathbf{c} - \mathbf{c}^\intercal V[\hat{\boldsymbol{\beta}}_p]\mathbf{c} \ge 0
+$$
+iff
+$$
+\mathbf{c}^\intercal \left( V[\hat{\boldsymbol{\beta}}^*_p] - V[\hat{\boldsymbol{\beta}}_p] \right) \mathbf{c} \ge 0
+$$
+
+this is the definition of $V[\hat{\boldsymbol{\beta}}^*_p] - V[\hat{\boldsymbol{\beta}}_p]$ being positive semi-definite.
+
+## Positive Semi-Definiteness
+
+Note
+\begin{align*}
+\text{MSE}[\mathbf{c}^\intercal\hat{\boldsymbol{\beta}}^*_p] &= V[\mathbf{c}^\intercal\hat{\boldsymbol{\beta}}^*_p] + \left(\mathbf{c}^\intercal E\{\hat{\boldsymbol{\beta}}^*_p - \boldsymbol{\beta}_p\} \right)^2 \\
+&= \mathbf{c}^\intercal V[\hat{\boldsymbol{\beta}}^*_p]\mathbf{c} + \mathbf{c}^\intercal E\{\hat{\boldsymbol{\beta}}^*_p - \boldsymbol{\beta}_p\}E\{\hat{\boldsymbol{\beta}}^*_p - \boldsymbol{\beta}_p\}^\intercal\mathbf{c} \\
+&= \mathbf{c}^\intercal\text{MSE}[\hat{\boldsymbol{\beta}}^*_p]\mathbf{c}
+\end{align*}
+
+So it's all about positive semi-definiteness for MSE matrices as well.
+
+
+Now back to regression models...
+
+
+## Analyzing Misspecification
+
+Let's assume the full model is 
+
+\begin{align*}
+\mathbf{y} &= \overbrace{\mathbf{X}}^{n \times K} \boldsymbol{\beta} + \boldsymbol{\epsilon}\\
+&= \underbrace{\mathbf{X}_p}_{n \times p} \boldsymbol{\beta}_p + \underbrace{\mathbf{X}_r}_{n \times r} \boldsymbol{\beta}_r + \boldsymbol{\epsilon}\\
+\end{align*}
+
+
+and the smaller model is 
+$$
+\mathbf{y} = \mathbf{X}_p \boldsymbol{\beta}_p + \widetilde{\boldsymbol{\epsilon}}
+$$
+
+- $r$ is the number of *removed* columns
+- $k = p-1 = K-r$ is the number of predictors left in the smaller model
+- both noise vectors have the same covariance matrix: $\sigma^2 \mathbf{I}$
+
+
+
+## Analyzing Misspecification
+
+Estimates for the full model
+
+- $\hat{\boldsymbol{\beta}}^* = (\mathbf{X}^\intercal\mathbf{X})^{-1} \mathbf{X}^\intercal \mathbf{y}$
+
+Estimates for the small model
+
+- $\hat{\boldsymbol{\beta}}_p = (\mathbf{X}_p^\intercal\mathbf{X}_p)^{-1} \mathbf{X}_p^\intercal \mathbf{y}$
+
+When we're overfitting
+
+$$
+E[\hat{\boldsymbol{\beta}}^*_p] = 
+\left[(\mathbf{X}^\intercal\mathbf{X})^{-1} \mathbf{X}^\intercal\right]_p \mathbf{X}_p \boldsymbol{\beta}_p
+$$
+When we're underfitting
+
+$$
+E[\hat{\boldsymbol{\beta}}_p]  = \boldsymbol{\beta}_p + (\mathbf{X}_p^\intercal \mathbf{X}_p)^{-1} \mathbf{X}_p^\intercal \mathbf{X}_r \boldsymbol{\beta}_r = \boldsymbol{\beta}_p + \mathbf{A}\boldsymbol{\beta}_r 
+$$
+
+## Analyzing Misspecification
+
+NB: $\mathbf{X}_p^\intercal \mathbf{X}_r = 0$ means removed columns are orthogonal to kept columns.
+
+
+$$
+\mathbf{X}^\intercal\mathbf{X} =
+\begin{bmatrix}
+\mathbf{X}_p^\intercal\mathbf{X}_p &\mathbf{X}_p^\intercal\mathbf{X}_r \\
+\mathbf{X}_r^\intercal\mathbf{X}_p & \mathbf{X}_r^\intercal\mathbf{X}_r
+\end{bmatrix}
+=
+\begin{bmatrix}
+\mathbf{X}_p^\intercal\mathbf{X}_p &\mathbf{0} \\
+\mathbf{0} & \mathbf{X}_r^\intercal\mathbf{X}_r
+\end{bmatrix}
+$$
+which means
+$$
+(\mathbf{X}^\intercal\mathbf{X})^{-1} = 
+\begin{bmatrix}
+(\mathbf{X}_p^\intercal\mathbf{X}_p)^{-1} &\mathbf{0} \\
+\mathbf{0} & (\mathbf{X}_r^\intercal\mathbf{X}_r)^{-1}
+\end{bmatrix}
+$$
+and the two estimators are equivalent! A [general formula for the inverse of a block matrix](https://en.wikipedia.org/wiki/Block_matrix#Block_matrix_inversion) exists, but I find it hard to memorize. 
+
+
+## Analyzing Misspecification
+
+Estimates for the full model
+
+- $\hat{\boldsymbol{\beta}}^* = (\mathbf{X}^\intercal\mathbf{X})^{-1} \mathbf{X}^\intercal \mathbf{y}$
+
+Estimates for the small model
+
+- $\hat{\boldsymbol{\beta}}_p = (\mathbf{X}_p^\intercal\mathbf{X}_p)^{-1} \mathbf{X}_p^\intercal \mathbf{y}$
+
+When we're overfitting
+
+$$
+V[\hat{\boldsymbol{\beta}}^*_p] = 
+\sigma^2
+\left[(\mathbf{X}^\intercal\mathbf{X})^{-1}\right]_p
+$$
+When we're underfitting
+
+$$
+V[\hat{\boldsymbol{\beta}}_p] =
+\sigma^2
+(\mathbf{X}_p^\intercal\mathbf{X}_p)^{-1}
+$$
+
+
+## Deliberately Underfitting?
+
+Assume the full model is true. 
+
+Wrong, smaller model:
+$$
+MSE[\hat{\boldsymbol{\beta}}_p] = \sigma^2
+(\mathbf{X}_p^\intercal\mathbf{X}_p)^{-1}+ \mathbf{A}\boldsymbol{\beta}_r\boldsymbol{\beta}_r^\intercal \mathbf{A}^\intercal 
+$$
+
+Right, full/bigger model:
+$$
+MSE[\hat{\boldsymbol{\beta}}^*_p] = \sigma^2 
+\left[(\mathbf{X}^\intercal\mathbf{X})^{-1}\right]_p + 0
+$$
+
+Is it possible we can have smaller-MSE estimates with the restricted model?
+
+
+## Deliberately Underfitting?
+
+Yes!
+
+$MSE[\hat{\boldsymbol{\beta}}^*_p] - MSE[\hat{\boldsymbol{\beta}}_p]$ is positive semi-definite if and only if
+$$
+V[\hat{\boldsymbol{\beta}}^*_r] - \boldsymbol{\beta}_r\boldsymbol{\beta}_r^\intercal
+$$
+is positive semi-definite.
+
+
+Intuitively, we should leave out columns with coefficents that are "near" zero (relative to their standard errors).
+
+## Overfitting/Underfitting and the Mean Response
+
+For the full model, we predict at $\mathbf{x}^\intercal = \begin{bmatrix} \mathbf{x}_p^\intercal & \mathbf{x}_r^\intercal \end{bmatrix}$:
+$$
+\hat{y}^* = \mathbf{x}^\intercal (\mathbf{X}^\intercal \mathbf{X})^{-1} \mathbf{X}^\intercal\mathbf{y}
+$$
+For the smaller model we have
+$$
+\hat{y} = \mathbf{x}_p^\intercal (\mathbf{X}_p^\intercal \mathbf{X}_p)^{-1} \mathbf{X}_p^\intercal\mathbf{y}
+$$
+
+## Overfitting/Underfitting and the Mean Response
+
+- $\hat{y}^* = \mathbf{x}^\intercal (\mathbf{X}^\intercal \mathbf{X})^{-1} \mathbf{X}^\intercal\mathbf{y}$
+
+- $\hat{y} = \mathbf{x}_p^\intercal (\mathbf{X}_p^\intercal \mathbf{X}_p)^{-1} \mathbf{X}_p^\intercal\mathbf{y}$
+
+If we're overfitting:
+$$
+E[\hat{y}^*] = \mathbf{x}^\intercal (\mathbf{X}^\intercal \mathbf{X})^{-1} \mathbf{X}^\intercal \mathbf{X}_p \boldsymbol{\beta}_p
+$$
+and if we're underfitting
+\begin{align*}
+E[\hat{y}] &= \mathbf{x}_p^\intercal (\mathbf{X}_p^\intercal \mathbf{X}_p)^{-1} \mathbf{X}_p^\intercal(\mathbf{X}_p \boldsymbol{\beta}_p + \mathbf{X}_r \boldsymbol{\beta}_r)\\
+&= \mathbf{x}_p^\intercal\boldsymbol{\beta}_p + \mathbf{x}_p^\intercal \mathbf{A} \boldsymbol{\beta}_r
+\end{align*}
+
+## Overfitting/Underfitting and the Mean Response
+
+- $\hat{y}^* = \mathbf{x}^\intercal (\mathbf{X}^\intercal \mathbf{X})^{-1} \mathbf{X}^\intercal\mathbf{y}$
+
+- $\hat{y} = \mathbf{x}_p^\intercal (\mathbf{X}_p^\intercal \mathbf{X}_p)^{-1} \mathbf{X}_p^\intercal\mathbf{y}$
+
+If we're overfitting:
+$$
+V[\hat{y}^*] = \sigma^2 \mathbf{x}^\intercal (\mathbf{X}^\intercal \mathbf{X})^{-1} \mathbf{x}
+$$
+and if we're underfitting
+$$
+V[\hat{y}] = \sigma^2 \mathbf{x}_p^\intercal (\mathbf{X}_p^\intercal \mathbf{X}_p)^{-1} \mathbf{x}_p
+$$
+
+
+## Deliberately Underfitting?
+
+There is a similar decomposition for *mean square prediction error*:
+
+
+$$
+E\left(y' -  \hat{y}\right)^2  = E\left(y' - E[y']\right)^2 + E[(\hat{y}- E[\hat{y}])^2] + \left(E[\hat{y}] - E[y']  \right)^2
+$$
+
+- inherent/future noise: $V[y']$ 
+
+- prediction/historical data noise: $V[\hat{y}]$
+
+- miscalibration/model-risk: $(E[\hat{y}] - E[y'])^2$
+
+
+## Deliberately Underfitting?
+
+Assume the full model is true. 
+
+- the unseen data point is $y'$
+
+- the full model prediction is $\hat{y}^*$
+
+- the reduced model prediction is $\hat{y}$

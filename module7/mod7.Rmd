@@ -66,9 +66,9 @@ A: We look at a combination: mean squared error.
 \begin{align*}
 MSE(\hat{\boldsymbol{\beta}}_p) &= E[(\hat{\boldsymbol{\beta}}_p - \boldsymbol{\beta}_p)(\hat{\boldsymbol{\beta}}_p - \boldsymbol{\beta}_p)^\intercal] \tag{defn.}\\
 &= E[(\hat{\boldsymbol{\beta}}_p \pm E[\hat{\boldsymbol{\beta}}_p] - \boldsymbol{\beta}_p)(\hat{\boldsymbol{\beta}}_p \pm E[\hat{\boldsymbol{\beta}}_p] - \boldsymbol{\beta}_p)^\intercal] \\
-&= E[(\hat{\boldsymbol{\beta}}_p^\intercal - E[\hat{\boldsymbol{\beta}}_p^\intercal])(\hat{\boldsymbol{\beta}}_p^\intercal - E[\hat{\boldsymbol{\beta}}_p^\intercal])^\intercal] \\
-&\hspace{10mm} E[(E[\hat{\boldsymbol{\beta}}_p^\intercal] - \beta_p)(E[\hat{\boldsymbol{\beta}}_p^\intercal] - \beta_p)^\intercal] \\
-&\hspace{5mm} + 2E[(\hat{\boldsymbol{\beta}}_p^\intercal - E[\hat{\boldsymbol{\beta}}_p^\intercal])(E[\hat{\boldsymbol{\beta}}_p^\intercal] - \beta_p)^\intercal] \\
+&= E[(\hat{\boldsymbol{\beta}}_p - E[\hat{\boldsymbol{\beta}}_p])(\hat{\boldsymbol{\beta}}_p - E[\hat{\boldsymbol{\beta}}_p])^\intercal] \\
+&\hspace{10mm} E[(E[\hat{\boldsymbol{\beta}}_p] - \beta_p)(E[\hat{\boldsymbol{\beta}}_p] - \beta_p)] \\
+&\hspace{5mm} + 2E[(\hat{\boldsymbol{\beta}}_p - E[\hat{\boldsymbol{\beta}}_p])(E[\hat{\boldsymbol{\beta}}_p] - \beta_p)^\intercal] \\
 &= V[\hat{\boldsymbol{\beta}}_p] + \text{Bias}[\hat{\boldsymbol{\beta}}_p]\text{Bias}[\hat{\boldsymbol{\beta}}_p]^\intercal + 0 \tag{fundamental!}
 \end{align*}
 
@@ -265,7 +265,7 @@ $MSE[\hat{\boldsymbol{\beta}}^*_p] - MSE[\hat{\boldsymbol{\beta}}_p]$ is positiv
 $$
 V[\hat{\boldsymbol{\beta}}^*_r] - \boldsymbol{\beta}_r\boldsymbol{\beta}_r^\intercal
 $$
-is positive semi-definite.
+is positive semi-definite. The [proof](https://stats.stackexchange.com/questions/411565/when-does-the-underfitted-regression-model-have-more-precise-coefficient-estimat/411701?noredirect=1#comment768988_411701) involves using the formula for inverses of block matrices.
 
 
 Intuitively, we should leave out columns with coefficents that are "near" zero (relative to their standard errors).
@@ -313,28 +313,212 @@ V[\hat{y}] = \sigma^2 \mathbf{x}_p^\intercal (\mathbf{X}_p^\intercal \mathbf{X}_
 $$
 
 
-## Deliberately Underfitting?
+## Decomposing MSPE
 
-There is a similar decomposition for *mean square prediction error*:
+If your observations are independent, there is a similar decomposition for *mean square prediction error* (proof: add and subtract expectations)
 
 
 $$
-E\left(y' -  \hat{y}\right)^2  = E\left(y' - E[y']\right)^2 + E[(\hat{y}- E[\hat{y}])^2] + \left(E[\hat{y}] - E[y']  \right)^2
+\text{MSPE}[\hat{y}]  :=
+E\left(y' -  \hat{y}\right)^2  = E\left[\left(y' - E[y']\right)^2\right] + E\left[(\hat{y}- E[\hat{y}])^2\right] + \left(E[\hat{y}] - E[y']  \right)^2
 $$
 
-- inherent/future noise: $V[y']$ 
+- the unseen data point is $y'$
+
+- the model's prediction is $\hat{y}$
+
+### Forecast errors is affected by all of the following
+
+- inherent/future noise: $V[y'] = E\left[\left(y' - E[y']\right)^2\right] = \sigma^2$ 
 
 - prediction/historical data noise: $V[\hat{y}]$
 
-- miscalibration/model-risk: $(E[\hat{y}] - E[y'])^2$
+- miscalibration/bias/model-risk: $(E[\hat{y}] - E[y'])^2$
 
 
 ## Deliberately Underfitting?
 
 Assume the full model is true. 
 
+### Notation
+
 - the unseen data point is $y'$
 
 - the full model prediction is $\hat{y}^*$
 
 - the reduced model prediction is $\hat{y}$
+
+### Question
+
+- when is it better to predict with the reduced model?
+
+## Deliberately Underfitting
+
+$$
+\text{MSPE}[\hat{y}^*] \ge \text{MSPE}[\hat{y}]
+$$
+if and only if
+$$
+V[\hat{\boldsymbol{\beta}}^*_r] - \boldsymbol{\beta}_r\boldsymbol{\beta}_r^\intercal
+$$
+
+Same condition as before!
+
+## Model Selection Criteria
+
+Most (all?) model selection criteria are based on the idea of minimizing *out-of-sample* error/loss/badness.
+
+Know the difference between the data used to estimate your model $\{y_i, \mathbf{x}_i \}_{i=1}^n$, and future/unseen data $\{y'_i\}_{i=1}^n$. 
+
+The predictor data is assumed nonrandom, or if it isn't, then everything is conditoning on it.
+
+## Mallows' Cp
+
+If you use *Mallows' Cp* to pick a model, you are trying to pick the model with the lowest *out-of-sample mean squared prediction error*:
+
+$$
+E[(y_i' - \mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}}_p )^2]
+$$
+
+### Note
+
+- This is *very different* in-sample mean square prediction error!
+
+- $\hat{\boldsymbol{\beta}}_p$ is from a particular model using $\mathbf{X}_p$ and $\mathbf{y}$
+
+- the expectation is taken with respect to everything that's random: $\{y_i\}$ and $\{y_i'\}$
+
+## Mallows' Cp 
+
+Some tricks you will find useful in the next slide:
+
+For idempotent matrices $\mathbf{A}$, 
+$$
+\text{tr}(\mathbf{A}) = \text{rank}(\mathbf{A})
+$$
+
+Proof: use the rank factorization $\mathbf{A} = \mathbf{C} \mathbf{F}$
+$$
+\mathbf{A}\mathbf{A} = \mathbf{A} \implies \mathbf{C} \mathbf{F}\mathbf{C} \mathbf{F} = \mathbf{C} \mathbf{F} \implies \mathbf{F}\mathbf{C}\mathbf{F} = \mathbf{F} \implies \mathbf{F}\mathbf{C} = \mathbf{I}
+$$
+so 
+$$
+\text{tr}(\mathbf{A}) = \text{tr}(\mathbf{C} \mathbf{F}) = \text{tr}(\mathbf{F}\mathbf{C}) = \text{rank}(\mathbf{A})
+$$
+
+## Mallows' Cp 
+
+Another trick that helps with expectations of quadratic forms
+
+\begin{align*}
+E\left[\mathbf{y}^\intercal \mathbf{A} \mathbf{y}\right] &= E\left[\text{tr}(\mathbf{y}^\intercal \mathbf{A} \mathbf{y})\right] \\
+&= E\left[\text{tr}( \mathbf{A} \mathbf{y}\mathbf{y}^\intercal)\right] \\
+&= \text{tr}(E\left[ \mathbf{A} \mathbf{y}\mathbf{y}^\intercal\right] ) \\
+&= \text{tr}( \mathbf{A} E\left[  \mathbf{y}\mathbf{y}^\intercal\right] ) \\
+&= \text{tr}( \mathbf{A} V[\mathbf{y}] + \mathbf{A}(E\left[  \mathbf{y}\right])(E\left[  \mathbf{y}\right])^\intercal )
+\end{align*}
+
+
+## Mallows' Cp
+
+In-sample MSPE:
+\begin{align*}
+E[(y_i - \mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}}_p )^2] &= 
+V[y_i - \mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}}_p] + \left(E[y_i - \mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}}_p ] \right)^2 \\
+&= V[y_i] + V[\mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}}_p] - 2 \text{Cov}\left(y_i, \mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}}_p \right) + \left(E[y_i - \mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}}_p ] \right)^2
+\end{align*}
+
+Out-of-sample MSPE:
+\begin{align*}
+E[(y_i' - \mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}}_p )^2] &= 
+V[y_i' - \mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}}_p] + \left(E[y_i' - \mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}}_p ] \right)^2 \\
+&= V[y_i'] + V[\mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}}_p] - 2 \text{Cov}\left(y_i', \mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}}_p \right) + \left(E[y_i' - \mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}}_p ] \right)^2 \\
+&= V[y_i'] + V[\mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}}_p]  + \left(E[y_i' - \mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}}_p ] \right)^2 \tag{indep.} \\
+&= V[y_i] + V[\mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}}_p]  + \left(E[y_i - \mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}}_p ] \right)^2 \tag{identicalness.} \\
+&= E[(y_i - \mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}}_p )^2] + 2 \text{Cov}\left(y_i, \mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}}_p \right) \tag{above.}
+\end{align*}
+
+## Mallows' Cp
+
+So
+$$
+E[(y_i' - \mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}}_p )^2] = E[(y_i - \mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}}_p )^2] + 2 \text{Cov}\left(y_i, \mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}}_p \right)
+$$
+
+which means
+
+$$
+E \left[ \frac{1}{n}\sum_{i=1}^n (y_i' - \mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}}_p )^2\right] = E\left[\frac{1}{n}\sum_{i=1}^n (y_i - \mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}}_p )^2\right] + 2 \frac{1}{n}\sum_{i=1}^n \text{Cov}\left(y_i, \mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}}_p \right)
+$$
+
+which is the same as 
+
+$$
+E \left[ \frac{1}{n}\sum_{i=1}^n (y_i' - \mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}}_p )^2\right] = E\left[\frac{1}{n}\sum_{i=1}^n (y_i - \mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}}_p )^2\right] + 2 \frac{\sigma^2}{n}p
+$$
+
+because $\text{Cov}\left(y_i, \mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}}_p \right) = \sigma^2 \mathbf{H}_{ii}$ and because $\text{tr}(\mathbf{H}) = p$
+
+## Mallows' Cp
+
+Based on
+$$
+E \left[ \frac{1}{n}\sum_{i=1}^n (y_i' - \mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}}_p )^2\right] = \underbrace{E\left[\frac{1}{n}\sum_{i=1}^n (y_i - \mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}}_p )^2\right]}_{\text{in-sample average error}} + \underbrace{ 2 \frac{\sigma^2}{n}p}_{\text{penalty}}
+$$
+
+Mallows' Cp for a particular model is
+$$
+C_p := \frac{1}{n}\sum_{i=1}^n (y_i - \mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}}_p )^2 + 2\frac{\hat{\sigma}^2_{\text{full}}}{n}p
+$$
+
+where $\hat{\sigma}^2_{\text{full}}$ is from the largest possible model (it's unbiased assuming the true model's predictors are contained in the full model). So, *pick the model with the smallest!*
+
+## Mallows' Cp
+
+Alternatively, sometimes people divide through by $\hat{\sigma}^2_{\text{full}}/n$ and then subtract $n$:
+$$
+\frac{1}{\hat{\sigma}^2_{\text{full}}}\sum_{i=1}^n (y_i - \mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}}_p )^2 + 2p - n = \frac{SS_{Res}(p) }{\hat{\sigma}^2_{\text{full}}} + 2p - n
+$$
+
+This has expectation roughly $p$, so people like to plot it versus $p$. However, the goal is still to pick the model with the smallest value (pick model $C$ in this case).
+
+```{r, echo=FALSE, out.width="300px"}
+knitr::include_graphics("MCP.png")
+```
+
+
+## AIC
+
+*Akaike's Information Criterion* (AIC) suggests picking the model that minimizes out of sample entropy (a different loss)
+
+$$
+E\left[-2 \sum_{i=1}^n \log \hat{p}(y_i') \right]
+$$
+
+Entropy is just the average surprise of your prediction:
+
+- $\hat{p}( \cdot)$ is a probabilistic prediction model estimated on old data $\{y_i\}$. WLOG let's say it's a density.
+
+- you want to plug new values $y_i'$ into the density, and high densities are better (no surprises)
+
+- this is equivalent to the negative twice the log of the density being low
+
+- the $y_i$s you're plugging in are random, so you take the average 
+
+- sometimes people maximize $E\left[\sum_{i=1}^n \log \hat{p}(y_i') \right]$
+
+
+## AIC
+
+For a particular model with $p$ columns in the design matrix
+\begin{align*}
+\text{AIC} &= - 2 \log(L) + 2p \\
+&= n  \log\left(\frac{SS_{Res}}{n} \right) + 2p
+\end{align*}
+
+
+where 
+$$
+\log L = -\frac{n}{2}\log(2\pi) - \frac{n}{2}\log(\hat{\sigma}^2 ) - \frac{1}{2 \hat{\sigma}^2}\sum_{i=1}^n \left( y_i - \mathbf{x}^\intercal \hat{\boldsymbol{\beta}}_p \right)^2 = \underbrace{-\frac{n}{2}(\log(2\pi) +1)}_{\text{often ignored}}- \frac{n}{2}\log\left(\frac{SS_{Res}}{n} \right) 
+$$
+is the normal density with the maximum likelihood estimates plugged in. Recall $\hat{\sigma}^2 = SS_{Res}/n$, the MLE, is different from MSE because of the denominator.

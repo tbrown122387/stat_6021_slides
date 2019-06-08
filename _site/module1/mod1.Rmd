@@ -1,0 +1,469 @@
+---
+title: Module 1 
+subtitle: STAT 6021
+author: Taylor R. Brown, PhD 
+output: slidy_presentation
+---
+
+<!-- output: html_document: -->
+<!--   toc: true -->
+<!--   theme: united -->
+
+<!-- output:  -->
+<!--   revealjs::revealjs_presentation: -->
+<!--     center: false -->
+
+
+<!-- <link href="../styles.css" rel="stylesheet"> -->
+
+## A brief tour 
+
+- Homeworks: 
+    * 40%
+    * find them in the Assignments tab 
+- Participation:
+    * 20%
+    * mostly reading comprehensions
+    * find them in the Tests & Quizzes tab
+- Final Project 
+    * 25%
+- Midterm
+    * 15% 
+<br/>
+<br/>
+<br/>
+
+My email: [`trb5me@virginia.edu`](mailto:trb5me@virginia.edu)
+
+Information: syllabus, Collab
+
+## Getting started
+
+Download Instructions for R:
+
+Download R from here: 
+	http://archive.linux.duke.edu/cran/
+See the first box at the top. Choose among Windows, Mac and Linux options.
+
+Download RStudio Desktop from here:
+	https://www.rstudio.com/products/rstudio/download/
+
+## Questions?
+
+Questions before we start the material?
+
+## Regression!
+
+We want to develop a framework for modelling a \emph{probabilistic} dependence between a \textbf{dependent response} $Y$ and an \textbf{explanatory predictor} $X$. The general form of a model would be 
+
+<br/>
+
+\[
+Y = f(X) + \epsilon
+\]
+
+<br/>
+
+- $f(\cdot)$ is a \emph{deterministic} function, and 
+- $\epsilon$ is a random error variable.
+
+## Regression!
+
+<br/>
+
+How do we get an idea for what $f(\cdot)$ should be? 
+
+<br/>
+
+Typically we plot $x_1, \ldots, x_n$ against $y_1, \ldots, y_n$. This is called a **scatterplot**.
+
+## A scatterplot
+
+```{r scatterplot, echo=FALSE}
+x <- rnorm(100)
+y <- 2 - 3*x + rnorm(100)
+plot(x, y, ylab = "y", xlab = "x")
+```
+
+
+<br/>
+
+Theoretical/scientific justification is often useful
+
+## A Workhorse: Simple Linear Regression
+
+When there looks to be a linear relationship, we can use the **simple linear regression model**.
+
+<br/>
+
+\[
+Y = \beta_0 +\beta_1 X + \epsilon
+\]
+<br/> 
+
+- $\beta_0$ is the nonrandom, unknown intercept
+- $\beta_1$ is the nonrandom, unknown slope
+- $\epsilon$ has mean $0$
+- $V[\epsilon \mid X] = \sigma^2$
+
+
+## The Conditional Distribution of $Y$ given $X$
+
+<br/>
+
+\begin{align*}
+E[Y \mid X] &= E[\beta_0 +\beta_1 X + \epsilon \mid X ] \\
+&= \beta_0 +\beta_1 X + E[\epsilon \mid X] \\
+&= \beta_0 + \beta_1 X 
+\end{align*}
+<br/>
+<br/>
+<br/>
+
+
+\begin{align*}
+V[Y \mid X ] &= V[\beta_0 +\beta_1 X + \epsilon \mid X ] \\
+&= V[\epsilon \mid X ] \\
+&= \sigma^2
+\end{align*}
+
+
+## The Conditional Distribution of $Y$ given $X$
+
+```{r, le_plot, echo=FALSE, out.width = "1000px"}
+knitr::include_graphics("slr.jpg")
+```
+
+
+## Estimation
+
+<br/>
+
+With an SLR model $Y = \beta_0 + \beta_1 X + \epsilon$. 
+
+<br/>
+
+We don't know $\beta_0, \beta_1, \sigma^2$, so we have to use data to estimate these. 
+
+## Estimation
+
+<br/>
+
+To estimate $\beta_0$ and $\beta_1$ we minimize the **loss**:
+\[
+S(\beta_0, \beta_1) = \sum_{i=1}^n \left[ y_i - (\beta_0 + \beta_1 x_i)\right]^2
+\]
+
+
+## Estimation
+
+This is the loss-minimizing line:
+```{r residual_plot1, echo=FALSE, out.width="1000px"}
+library(ggplot2)
+d <- data.frame(x,y)
+fit <- lm(y ~ x, data = d)
+d$predicted <- predict(fit)   # Save the predicted values
+ggplot(d, aes(x = x, y = y)) +
+  geom_smooth(method = "lm", se = FALSE, color = "lightgrey") +  # Plot regression slope
+  geom_segment(aes(xend = x, yend = predicted), alpha = .2) +  # alpha to fade lines
+  geom_point() +
+  geom_point(aes(y = y), shape = 1) +
+  theme_bw()  # Add theme for cleaner look
+```
+
+
+
+## Estimation
+
+
+```{r residual_plot2, echo=FALSE}
+plotSurface <- function(lowerFirst, upperFirst, 
+                        lowerSecond, upperSecond, 
+                        numGridPointsOnEachAxis, f, contour = F, ...){
+  A <- seq(lowerFirst, upperFirst, length.out = numGridPointsOnEachAxis)
+  B <- seq(lowerSecond, upperSecond, length.out = numGridPointsOnEachAxis)
+  args <- expand.grid(A,B)
+  z <- mapply(f, args[,1], args[,2])
+  dim(z) <- c(length(A), length(B))
+  if(contour){
+    contour(A, B, z)
+  }else{
+    persp(x=A, y=B, z=z, ...)
+  }
+}
+eval_loss <- function(int, slope) sum((y - int - slope * x)^2)
+plotSurface(-10, 10, -10, 10, 50, eval_loss, F, theta=-120, zlab = "loss", xlab = "intercept", ylab = "slope")
+```
+
+
+## Estimation
+
+<br/>
+
+The $\hat{\beta_0}$ and $\hat{\beta_1}$ that minimize this are called the **least squares estimates**.
+
+<br/>
+
+The **estimated regression line** is then
+\[
+\hat{y} = \hat{\beta}_0 + \hat{\beta}_1 x 
+\]
+
+
+
+## Chain rule to the rescue
+
+\begin{align*}
+\frac{\partial}{\partial \beta_0} S(\beta_0, \beta_1) &= \frac{\partial}{\partial \beta_0}\sum_{i=1}^n ( y_i - \beta_0 - \beta_1 x_i)^2 \\
+&= \sum_{i=1}^n \frac{\partial}{\partial \beta_0}( y_i - \beta_0 - \beta_1 x_i)^2 \\
+&= \sum_{i=1}^n 2 ( y_i - \beta_0 - \beta_1 x_i) (-1) \\
+&\overset{\text{set}}{=}0
+\end{align*}
+
+
+\begin{align*}
+\frac{\partial}{\partial \beta_1} S(\beta_0, \beta_1) &= \frac{\partial}{\partial \beta_1}\sum_{i=1}^n ( y_i - \beta_0 - \beta_1 x_i)^2 \\
+&= \sum_{i=1}^n \frac{\partial}{\partial \beta_1}( y_i - \beta_0 - \beta_1 x_i)^2 \\
+&= \sum_{i=1}^n 2 ( y_i - \beta_0 - \beta_1 x_i) (-x_i) \\
+&\overset{\text{set}}{=}0
+\end{align*}
+
+## The normal equations
+
+<br/>
+
+The **normal equations** are what you get when you re-arrange things to get rid of negative signs:
+
+\[
+n\hat{\beta}_0 + \left(\sum_i x_i \right)\hat{\beta}_1 = \sum_i y_i
+\]
+
+<br/>
+
+
+\[
+\left(\sum_i x_i \right)\hat{\beta}_0 + \left(\sum_i x_i^2 \right) \hat{\beta}_1 = \sum_i x_i y_i
+\]
+
+<br/>
+
+Sometimes people divide through by $n$
+
+\[
+\hat{\beta}_0 + \bar{x}\hat{\beta}_1 = \bar{y}
+\]
+
+<br/>
+
+
+\[
+\bar{x}\hat{\beta}_0 + \frac{\sum_i x_i^2 }{n} \hat{\beta}_1 = \frac{\sum_i x_i y_i}{n}
+\]
+
+## The final solution
+
+<br/>
+
+finishing off the work, we solve for $\hat{\beta}_0$ and $\hat{\beta}_1$
+\[
+\hat{\beta}_0 = \bar{y} - \hat{\beta}_1 \bar{x}
+\]
+
+<br/>
+
+
+\[
+\hat{\beta}_1 = \frac{\sum_i x_i y_i - n \bar{x}\bar{y}}{\sum_i x_i^2 - n\bar{x}^2} = \frac{\sum_i(x_i - \bar{x})(y_i - \bar{y})}{\sum_j (x_j - \bar{x})^2}
+\]
+
+
+## The fitted values
+
+<br/>
+
+To get the **fitted (predicted) values**, denoted $\hat{y}_1, \hat{y}_2, \ldots, \hat{y}_n$, are what you get when you plug in $x_1, \ldots, x_n$ into the estimated regression line $\hat{\beta}_0 + \hat{\beta}_1x$.
+
+<br/>
+
+\[
+\hat{y}_i = \hat{\beta}_0 + \hat{\beta}_1 x_i
+\]
+for $i = 1, \ldots, n$.
+
+
+## A Trick
+
+<br/>
+
+$$
+\hat{\beta}_1 = \sum_i c_i y_i
+$$
+
+Where 
+$$
+c_i = \frac{(x_i - \bar{x}) }{S_{xx}} = \frac{(x_i - \bar{x}) }{\sum_{j=1}^n (x_j - \bar{x})^2 }.
+$$
+
+
+where $\sum(x_i - \bar{x})^2 = S_{xx}$
+
+## A Trick
+
+<br/>
+
+Why:
+ 
+<br/>
+
+\begin{align*}
+\hat{\beta}_1 &= \frac{\sum_i (x_i - \bar{x})(y_i - \bar{y})}{S_{xx}} \\
+&= \frac{\sum_i (x_i - \bar{x})y_i  - \sum (x_i - \bar{x})\bar{y}}{S_{xx}}\\
+&= \frac{\sum_i (x_i - \bar{x})y_i  }{S_{xx}} \\
+&= \sum_i c_i y_i
+\end{align*}
+
+because $\sum(x_i - \bar{x}) = 0$. 
+
+
+## showing unbiasedness with our new trick
+
+Drop from notation dependence on $x_1, \ldots, x_n$...
+
+\begin{align*}
+E[\hat{\beta}_1 ] &= E[ \sum_i c_i y_i ] \\
+&= \sum_i c_i E[y_i] \\
+&= \sum_i c_i E[\beta_0 + \beta_1 x_i + \epsilon_i ] \\
+&= \sum_i c_i [\beta_0 + \beta_1 x_i ] \\
+&= \beta_0 \sum_i c_i  + \beta_1 \sum_i c_i x_i  \\
+&= \beta_0 \sum_i \frac{(x_i - \bar{x}) }{S_{xx}}  + \beta_1 \sum_i \frac{(x_i - \bar{x}) }{S_{xx}} x_i  \\
+&= \beta_1 \sum_i c_i \frac{(x_i - \bar{x}) }{S_{xx}}  \\
+&= \beta_1 \sum_i \frac{(x_i - \bar{x})^2 }{S_{xx}} \\
+&= \beta_1
+\end{align*}
+
+
+## calculating the variance with our new trick
+
+
+\begin{align*}
+V[\hat{\beta}_1 ] &= V[ \sum_i c_i y_i ] \\
+&= \sum_i c_i^2 V[y_i] \\
+&= \sum_i c_i^2 V[\beta_0 + \beta_1 x_i + \epsilon_i ] \\
+&= \sum_i c_i^2 \sigma^2 \\
+&= \sigma^2 \sum_i \frac{(x_i - \bar{x})^2 }{S_{xx}^2}  \\
+&= \sigma^2 \frac{S_{xx} }{S_{xx}^2}  \\
+&=  \frac{\sigma^2 }{S_{xx}} 
+\end{align*}
+
+
+## mean of intercept
+
+
+Similarly
+$$
+E[\hat{\beta}_0]= E[\bar{y} - \hat{\beta}_1 \bar{x}] = E[\bar{y}] - \beta_1\bar{x} = \beta_0
+$$
+
+
+$$
+V[\hat{\beta}_0]= \sigma^2\left(\frac{1}{n} + \frac{\bar{x}^2}{S_{xx}} \right)
+$$
+
+## Estimating the third parameter
+
+<br/>
+
+Estimating $\sigma^2$ can be done by taking the average squared error
+
+```{r residual_plot3, echo=FALSE, out.width="700px"}
+library(ggplot2)
+d <- data.frame(x,y)
+fit <- lm(y ~ x, data = d)
+d$predicted <- predict(fit)   # Save the predicted values
+ggplot(d, aes(x = x, y = y)) +
+  geom_smooth(method = "lm", se = FALSE, color = "lightgrey") +  # Plot regression slope
+  geom_segment(aes(xend = x, yend = predicted), alpha = .2) +  # alpha to fade lines
+  geom_point() +
+  geom_point(aes(y = y), shape = 1) +
+  theme_bw()  # Add theme for cleaner look
+```
+
+## Estimating the third parameter
+
+$$
+\hat{\sigma}^2 = \frac{\sum_{i=1}^n (y_i - \hat{y}_i )^2 }{n-2} = \frac{SS_{\text{res}} }{n-2}
+$$
+Note we use $n-2$ instead of $n$
+
+
+## Sums of Squares
+
+$$
+SS_T = SS_R + SS_{Res}
+$$
+or
+$$
+\sum_{i=1}^n (y_i - \bar{y})^2 = \sum_{i=1}^n (y_i - \hat{y}_i)^2 + \sum_{i=1}^n (\hat{y}_i - \bar{y})^2
+$$
+
+Breaking up *total sums of squares* into good and bad pieces has a few other uses
+
+## Sums of Squares
+
+\begin{align*}
+\sum_{i=1}^n (y_i - \bar{y})^2 &= \sum_{i=1}^n (y_i -\hat{y}_i + \hat{y}_i - \bar{y})^2 \\
+&=\sum_{i=1}^n (y_i - \hat{y}_i)^2 + \sum_{i=1}^n (\hat{y}_i - \bar{y})^2 + 2 \sum_{i=1}^n (y_i - \hat{y}_i)(\hat{y}_i - \bar{y})
+\end{align*}
+
+use the normal equations on that last piece:
+
+\begin{align*}
+\sum_{i=1}^n (y_i - \hat{y}_i)(\hat{y}_i - \bar{y}) &= \sum_{i=1}^n (y_i - \hat{y}_i)\hat{y}_i - \bar{y} \sum_{i=1}^n (y_i - \hat{y}_i)
+\end{align*}
+
+it's clearer after you write 
+
+\begin{align*}
+\sum_{i=1}^n (y_i - \hat{y}_i)\hat{y}_i &= \sum_{i=1}^n (y_i - \hat{y}_i)(\hat{\beta}_0 + \hat{\beta}_1 x_i ) \\
+&= \hat{\beta}_0 \sum_{i=1}^n (y_i - \hat{y}_i) + \hat{\beta}_1\sum_{i=1}^n (y_i - \hat{y}_i) x_i
+\end{align*}
+
+## Coefficient of Determination
+
+$$
+R^2 = \frac{SS_R}{SS_T}
+$$
+"the proportion of variation explained by the regressor x"
+
+
+
+
+
+
+
+The red line is the quantile $F_{\alpha,1, 20}$.  
+
+
+## `R` examples!
+
+```{r demo1, echo=TRUE}
+setwd("/home/t/UVa/all_teaching/summer19_6021")
+my_data <- read.csv("data/data-table-B3.csv")
+head(my_data) # always check that it worked
+```
+
+
+## `R` examples!
+
+```{r demo2, echo=TRUE}
+reg_mod_1 <- lm(y ~ x1, data = my_data)
+summary(reg_mod_1)  # print a lot
+```
+
+
+## `R` examples!
+
+```{r demo4, echo=TRUE}
+plot(my_data$x1, my_data$y)
+abline(reg_mod_1)  # overlay the best fit line
+```

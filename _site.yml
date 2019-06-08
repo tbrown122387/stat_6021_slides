@@ -1,0 +1,28 @@
+name: "6021 Notes"
+navbar:
+  title: "6021 Notes"
+  type: inverse
+  left:
+    - text: "Home"
+      icon: fa-home
+      href: index.html
+    - text: "Modules"
+      icon: fa-gear
+      menu:
+        - text: "Module 1"
+          href: module1/mod1.html
+        - text: "Module 2"
+          href: module2/mod2.html
+        - text: "Module 3"
+          href: module3/mod3.html
+        - text: "Module 4"
+          href: module4/mod4.html
+        - text: "Module 5"
+          href: module5/mod5.html
+        - text: "Module 6"
+          href: module6/mod6.html
+        - text: "Module 7"
+          href: module7/mod7.html
+  right:
+    - icon: fa-question fa-lg
+      href: http://people.virginia.edu/~trb5me/

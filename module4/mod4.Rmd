@@ -132,6 +132,26 @@ hist(intern_s_resids - extern_s_resids)
 
 <!-- talk about leverage ? -->
 
+## Plotting Residuals
+
+- check for normality
+
+- checking homoskedasticity 
+
+- checking linearity/missing predictors
+
+- checking for outliers
+
+Plots:
+
+- $t_i$ by themselves
+
+- $t_i$ versus $\hat{y}_i$
+
+- $t_i$ versus $x_{ij}$ for any $j$ (in particular if one predictor is time)
+
+- partial regression and partial residual plots
+
 ## Checking normality
 
 If $\boldsymbol{\epsilon}$ is normal, then $\{t_i\}$ are iid $t_{df_{Res}}$
@@ -144,7 +164,17 @@ t_densities <- dt(x_grid, dfRes)
 points(x_grid, t_densities, type = "l", col = "red")
 ```
 
-## Checking 
+## Checking normality
+
+QQ plots are a little better for spotting heavy/thin tails or skewness...
+
+```{r}
+qqnorm(extern_s_resids)
+qqline(extern_s_resids)
+```
+
+
+## Checking Homoskedasticity and Linearity
 
 Always plot $t_i$ versus $\hat{y}_i$ to check for heteroskedasticity and nonlinearities
 
@@ -153,7 +183,7 @@ knitr::include_graphics("screenshot.png")
 ```
 
 
-## Checking 
+## Checking Homoskedasticity and Linearity
 
 Our model's plot:
 ```{r resids4, echo=T}
@@ -176,7 +206,28 @@ bad_mod <- lm(y ~ x, data = my_df)
 plot(my_df$x,my_df$y, xlab = "x", ylab = "y")
 points(my_df$x, fitted.values(bad_mod), type ="l", col= "red")
 plot(fitted.values(bad_mod), studres(bad_mod))
+plot(my_df$x, studres(bad_mod))
 ```
+
+## Added-Variable Plots
+
+A *partial regression plot* aka an *added-variable plot* plots two types of residuals against each other
+
+- $y$ against all predictors except $x_i$
+
+- $x_i$ against all other predictors
+
+The plot is straight-sloped if it should be included in the model. It's horizontal if it's redundant. And it's curved if you might need to add a power of $x_i$ to the regression model.
+
+## Added-Variable Plots
+
+
+```{r, echo=T}
+library(car)
+head(my_data)
+avPlots(lm(y ~ ., data = my_data))
+```
+
 
 ## Variance-Stabilizing Transformations
 
@@ -267,7 +318,12 @@ $$
 \lim_{\lambda \to 0}\frac{y^{\lambda}-1}{\lambda} = \lim_{\lambda \to 0}\frac{\exp[\lambda \log y]-1}{\lambda} = \lim_{\lambda \to 0}\exp[\lambda \log y] \log y = \log y < \infty
 $$
 
-<!-- However the units are changing! -->
+![Guillaume de l'Hôpital (source: wikipedia)](https://upload.wikimedia.org/wikipedia/commons/a/a3/Guillaume_de_l%27H%C3%B4pital.jpg)
+
+<!-- %```{r, echo=F,out.width="200px"} -->
+<!-- %knitr::include_graphics("hopital.jpg") -->
+<!-- %``` -->
+
 
 ## The Box-Cox procedure
 

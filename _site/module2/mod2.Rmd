@@ -354,7 +354,7 @@ $$
 
 To find a *prediction* interval, we need to look at the prediction error
 $$
-y_0 - \hat{y}_0 = (\beta_0 - \hat{\beta}_0) + (\beta_1  - \hat{\beta}_1)x_0
+y_0 - \hat{y}_0 = (\beta_0 - \hat{\beta}_0) + (\beta_1  - \hat{\beta}_1)x_0 + \epsilon
 $$
 Clearly a mean zero normal variate.
 

@@ -1,0 +1,45 @@
+---
+title: Module 8
+subtitle: STAT 6021
+author: Taylor R. Brown, PhD
+output: slidy_presentation
+---
+
+## Motivation
+
+Recall from module 5:
+
+$$
+\hat{\mathbf{y}} = \mathbf{H}\mathbf{y}
+$$
+
+and if you look at one of the rows you have 
+
+$$
+\hat{y}_j = \sum_{i=1}^n y_i \mathbf{H}_{j,i}.
+$$
+
+The number $\mathbf{H}_{j,i}$ is the *leverage* of obs. $i$ on fitted value $j$. 
+
+## Motivation 
+
+In module 5 we discussed how "leverage" is related to distance form the center in $\mathbf{X}$-space:
+
+$$
+\mathbf{H}_{i,j} = \frac{1}{n}   + (\mathbf{x}_{i,-1} - \bar{\mathbf{x}}_{-1})^{\intercal}( \mathbf{S}^2)^{-1}(\mathbf{x}_{j,-1} - \bar{\mathbf{x}}_{-1}) /(n-1)
+$$
+where $\mathbf{S}$ is the matrix of sample variances/covariances (with $n-1$ in the denominator).
+
+- $\mathbf{H}_{i,j}$ is the similarity between observations $i$ and $j$
+
+- $\mathbf{H}_{i,i}$ is the distance of observation $i$ from the center.
+
+## Definitions
+
+In addition to leverage, we have the concept of an observation's *influence*. An observation has high influence if its existence affects the regression coefficient estimates.
+
+```{r, echo=F, out.width="600px"}
+knitr::include_graphics("leverage_and_influence.png")
+```
+
+

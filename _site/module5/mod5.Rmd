@@ -77,13 +77,13 @@ $$
 and if you look at one of the rows you have 
 
 $$
-\hat{y}_j = \sum_{i=1}^n y_i h_{j,i}
+\hat{y}_j = \sum_{i=1}^n y_i \mathbf{H}_{j,i}
 $$
 
 
-So if $h_{jj} \approx 1$ then the $j$th observation has a lot of *leverage* in determing the $j$th prediction.
+So $\mathbf{H}_{j,i}$ is the *leverage* of obs. $i$ on fitted value $j$. 
 
-Rule of thumb: flag row $j$ when $\mathbf{H}_{jj} > 3 \frac{k+1}{n}$
+Rule of thumb: flag row $j$ when $\mathbf{H}_{jj} > 3 \frac{k+1}{n}$. More on this in module 8!
 
 
 <!-- ## Exploring $\mathbf{H}$ -->
@@ -162,10 +162,16 @@ How does this relate to
 $$
 \mathbf{H} = \mathbf{X}(\mathbf{X}^{\intercal}\mathbf{X})^{-1}\mathbf{X}^{\intercal}
 $$
-Each element of the hat matrix kind of looks like a Mahalanobis distance:
+
 $$
 \mathbf{H}_{i,j} = \mathbf{X}_i^{\intercal}(\mathbf{X}^{\intercal}\mathbf{X})^{-1}\underbrace{\mathbf{X}_j}_{\text{row j}}
 $$
+
+We will show:
+
+- $\mathbf{H}_{i,j}$ is the similarity between observations $i$ and $j$
+
+- $\mathbf{H}_{i,i}$ is the distance of observation $i$ from the center.
 
 
 ## Exploring $\mathbf{H}$
@@ -192,7 +198,7 @@ $$
 So
 
 \begin{align*}
-\mathbf{H}_{i,i} &= \mathbf{X}_i^{\intercal}(\mathbf{X}^{\intercal}\mathbf{X})^{-1}\mathbf{X}_i \\
+\mathbf{H}_{i,j} &= \mathbf{X}_i^{\intercal}(\mathbf{X}^{\intercal}\mathbf{X})^{-1}\mathbf{X}_j \\
 &= 
 \begin{bmatrix}
 1 & \mathbf{x}_{i,-1}^\intercal
@@ -200,7 +206,7 @@ So
 \begin{bmatrix} 1/n+\bar{\mathbf{x}}_{-1}^{\intercal}( [n-1] \mathbf{S}^2)^{-1}\bar{\mathbf{x}}_{-1}  & -\bar{\mathbf{x}}_{-1}^{\intercal}( [n-1] \mathbf{S}^2)^{-1} \\ - ([n-1] \mathbf{S}^2)^{-1}\bar{\mathbf{x}}_{-1} & ( [n-1] \mathbf{S}^2)^{-1} \end{bmatrix}
 \begin{bmatrix}
 1 \\
-\mathbf{x}_{i,-1}
+\mathbf{x}_{j,-1}
 \end{bmatrix}\\
 &= \begin{bmatrix}
 \frac{1}{n} - (\mathbf{x}_{i,-1} - \bar{\mathbf{x}}_{-1})^{\intercal}( [n-1] \mathbf{S}^2)^{-1}\bar{\mathbf{x}}_{-1}  & 
@@ -208,10 +214,12 @@ So
 \end{bmatrix}
 \begin{bmatrix}
 1 \\
-\mathbf{x}_{i,-1}
+\mathbf{x}_{j,-1}
 \end{bmatrix}\\
-&= \frac{1}{n}   + \underbrace{(\mathbf{x}_{i,-1} - \bar{\mathbf{x}}_{-1})^{\intercal}( \mathbf{S}^2)^{-1}(\mathbf{x}_{i,-1} - \bar{\mathbf{x}}_{-1})}_{\text{Mahalanobis dist.} }/(n-1)
+&= \frac{1}{n}   + (\mathbf{x}_{i,-1} - \bar{\mathbf{x}}_{-1})^{\intercal}( \mathbf{S}^2)^{-1}(\mathbf{x}_{j,-1} - \bar{\mathbf{x}}_{-1})/(n-1)
 \end{align*}
+
+In particular $\mathbf{H}_{i,i} = \frac{1}{n}   + \underbrace{(\mathbf{x}_{i,-1} - \bar{\mathbf{x}}_{-1})^{\intercal}( \mathbf{S}^2)^{-1}(\mathbf{x}_{i,-1} - \bar{\mathbf{x}}_{-1})}_{\text{Mahalanobis dist.} }/(n-1)$
 
 <!-- ## On the variance of ${\boldsymbol{\beta}}$ -->
 
@@ -314,12 +322,12 @@ So
 V[\hat{\beta}_3] &= \frac{\sigma^2}{\mathbf{x}_3^\intercal\mathbf{x}_3 - \mathbf{x}_3^\intercal\mathbf{x}_{-3} [\mathbf{x}_{-3}^\intercal\mathbf{x}_{-3}]^{-1}\mathbf{x}_{-3}^\intercal\mathbf{x}_3 } \\
 &= \frac{\sigma^2}{\mathbf{x}_3^\intercal\left[\mathbf{I} -  \mathbf{H}_{-3} \right]\mathbf{x}_3  } \\
 &= \frac{\sigma^2}{SS_{T,3} - SS_{R,3}   } \\
-&= \frac{\sigma^2}{SS_{T,3} }\left[1 - R^2_{3}\right]
+&= \frac{\sigma^2}{SS_{T,3} }\left[\frac{1}{1 - R^2_{3} }\right]
 \end{align*}
 
 We call $\text{VIF}_3 = \frac{1}{1 - R^2_{3}}$ the *variance inflation factor* for the third coefficient. 
 
-NB: the covariances increase with the VIF, too!
+NB: the *co*-variances increase with the VIF, too!
 
 
 ## The Variance Inflation Factor (VIF)

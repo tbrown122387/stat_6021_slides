@@ -42,6 +42,27 @@ In addition to leverage, we have the concept of an observation's *influence*. An
 knitr::include_graphics("leverage_and_influence.png")
 ```
 
+## Anscombe's quartet
+
+A good time to mention [*Anscombe's quartet*](https://www.tandfonline.com/doi/abs/10.1080/00031305.1973.10478966)
+
+4 data sets $\{x_i, y_i\}$
+
+- same mean
+- same variances
+- same correlation
+- and so: same estimated regression line
+
+but...
+
+
+## Anscombe's quartet
+
+```{r, echo=F, out.width="550px"}
+knitr::include_graphics("638px-Anscombe's_quartet_3.svg.png")
+```
+source:Wikipedia
+
 ## Cook's D
 
 *Cook's D* can be thought of as a measure for how a particular observation affects the overall fit/coefficient estimates/predictions.
@@ -68,7 +89,9 @@ where
 $$
 r_i = \frac{e_i}{\sqrt{ MS_{Res} (1 - \mathbf{H}_{ii}) }} 
 $$
-(defined in module 4). Influence is a combination of x-outliers (leverage) and y-outliers (residuals)!
+(from in module 4). 
+
+Key takeaway: influence is a combination of x-outliers (leverage) and y-outliers (residuals)!
 
 ## Cook's D
 
@@ -108,4 +131,59 @@ plot(fullMod, which=5)
 
 Cook's D measures overall influence of each observation.
 
-DFFITS and DFBETAS measure influence of each observation **on a particular coefficient, or a particular predicted value**.
+DFFITS and DFBETAS measure influence of each observation **on a particular coefficient, or on a particular predicted value**.
+
+## DFBETAS
+
+The formula for the DFBETAS of coefficient $j$ when leaving out observation $i$ is
+
+$$
+\frac{ \hat{\beta}_j - \hat{\beta}_{j(i)} }{ \sqrt{ S^2_{(i)} (\mathbf{X}^\intercal \mathbf{X})^{-1}_{jj} } }
+$$
+
+where 
+
+- $S^2_{(i)} = \frac{\mathbf{e}_{(i)}^\intercal \mathbf{e}_{(i)}}{ n - p -1 }$
+
+## DFBETAS
+
+```{r, echo=T, out.width="600px"}
+fullMod <- lm(mpg ~ ., data = carsdf)
+dfbetas(fullMod)
+library(olsrr)
+ols_plot_dfbetas(fullMod) # nice plots
+```
+
+## DFFITS
+
+The formula for the DFFITS when leaving out observation $i$ is
+
+$$
+\frac{\hat{y}_i - \hat{y}_{(i)}}{\sqrt{S^2_{(i)}\mathbf{H}_{ii} }}
+$$
+
+where 
+
+- $\hat{y}_{(i)} = \mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}}_{(i)}$
+
+## DFFITS
+
+```{r, echo=T}
+dffits(fullMod)
+ols_plot_dffits(fullMod)
+carsdf[c(17,20,31),]
+```
+
+
+
+## Takeaways
+
+Recap:
+
+- leverage is "outlier-ness" in $x$-space
+- standardized residuals measure "outlier-ness" in $y$-space
+- influence is a combination of both of these (proofs and pictures)
+- influence on everything: Cook's D
+- influence on a particular beta: DFBETAS
+- influence on a particular prediction: DFFITS
+- cutoff values are rules-of-thumb and not exact hypothesis tests

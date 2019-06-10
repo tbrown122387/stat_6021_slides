@@ -24,6 +24,8 @@ navbar:
           href: module6/mod6.html
         - text: "Module 7"
           href: module7/mod7.html
+        - text: "Module 8"
+          href: module8/mod8.html
   right:
     - icon: fa-question fa-lg
       href: http://people.virginia.edu/~trb5me/

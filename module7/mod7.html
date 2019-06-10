@@ -1477,6 +1477,7 @@ E\left[-2 \sum_{i=1}^n \log \hat{p}(y_i') \right]
 <li><p>end of section 10.2 has some suggestions that may or may not work</p></li>
 <li><p>do the exhaustive search if you can, although there are no guarantees here, either.</p></li>
 <li><p>remember that Mallows’ and AIC are very noisy</p></li>
+<li><p>looking at hypothesis tests after doing model selection is misleading/worthless</p></li>
 </ul>
 </div>
 <div id="model-adequacy-checking-versus-model-validation" class="slide section level2">
@@ -1543,7 +1544,7 @@ E\left[-2 \sum_{i=1}^n \log \hat{p}(y_i') \right]
 <p>So, because <span class="math inline">\(\mathbf{X}_{(i)}\mathbf{y}_{(i)} = \mathbf{X}^\intercal\mathbf{y} - \overbrace{\mathbf{x}_i}^{\text{row i}} y_i\)</span>, <span class="math display">\[
 \hat{\boldsymbol{\beta}}_{(i)} = \hat{\boldsymbol{\beta}} - \frac{e_i (\mathbf{X}^\intercal\mathbf{X})^{-1}\mathbf{x}_i }{1-\mathbf{H}_{ii}}
 \]</span> leading us to get <span class="math display">\[
-y_i - \hat{y}_{(i)} = y_i - \mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}} + e_i \mathbf{x}_i^\intercal (\mathbf{X}^\intercal \mathbf{X})^{-1}\mathbf{x}_i/(1-\mathbf{H}_{ii}) =\left(\frac{e_i}{1 - h_{ii}} \right)
+y_i - \hat{y}_{(i)} = y_i - \mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}} + e_i \mathbf{x}_i^\intercal (\mathbf{X}^\intercal \mathbf{X})^{-1}\mathbf{x}_i/(1-\mathbf{H}_{ii}) =\left(\frac{e_i}{1 - \mathbf{H}_{ii} } \right)
 \]</span> <span class="math inline">\(\square\)</span></p>
 </div>
 <div id="press-statistic" class="slide section level2">

@@ -660,6 +660,8 @@ ols_step_both_p(fullMod, pent = .1, prem = .3, details = T)
 
 - remember that Mallows' and AIC are very noisy
 
+- looking at hypothesis tests after doing model selection is misleading/worthless
+
 
 ## Model Adequacy Checking versus Model Validation
 
@@ -744,7 +746,7 @@ $$
 $$
 leading us to get
 $$
-y_i - \hat{y}_{(i)} = y_i - \mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}} + e_i \mathbf{x}_i^\intercal (\mathbf{X}^\intercal \mathbf{X})^{-1}\mathbf{x}_i/(1-\mathbf{H}_{ii}) =\left(\frac{e_i}{1 - h_{ii}} \right)
+y_i - \hat{y}_{(i)} = y_i - \mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}} + e_i \mathbf{x}_i^\intercal (\mathbf{X}^\intercal \mathbf{X})^{-1}\mathbf{x}_i/(1-\mathbf{H}_{ii}) =\left(\frac{e_i}{1 - \mathbf{H}_{ii} } \right)
 $$
 $\square$
 

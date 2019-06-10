@@ -42,4 +42,70 @@ In addition to leverage, we have the concept of an observation's *influence*. An
 knitr::include_graphics("leverage_and_influence.png")
 ```
 
+## Cook's D
 
+*Cook's D* can be thought of as a measure for how a particular observation affects the overall fit/coefficient estimates/predictions.
+
+$$
+D_i := \frac{\left(\boldsymbol{\beta}_{(i)} - \boldsymbol{\beta}\right)^\intercal (\mathbf{X}^\intercal \mathbf{X}) \left(\boldsymbol{\beta}_{(i)} - \boldsymbol{\beta}\right) }{p MS_{Res} }
+$$
+This is clearly the same as 
+$$
+D_i = \frac{\left( \hat{\mathbf{y}}_{(i)} - \hat{\mathbf{y}}\right)^\intercal \left( \hat{\mathbf{y}}_{(i)} - \hat{\mathbf{y}}\right) }{p MS_{Res} }
+$$
+
+Notice the last numerator is the PRESS statistic!
+
+
+## Cook's D
+
+Finally, Cook's D can be written as
+
+$$
+D_i = \frac{r_i^2}{p} \frac{\mathbf{H}_{ii}}{1 - \mathbf{H}_{ii}}
+$$
+where
+$$
+r_i = \frac{e_i}{\sqrt{ MS_{Res} (1 - \mathbf{H}_{ii}) }} 
+$$
+(defined in module 4). Influence is a combination of x-outliers (leverage) and y-outliers (residuals)!
+
+## Cook's D
+
+Proof: first, recall from module 7
+
+$$
+\hat{\boldsymbol{\beta}}_{(i)} = \hat{\boldsymbol{\beta}} - \frac{e_i (\mathbf{X}^\intercal\mathbf{X})^{-1}\mathbf{x}_i }{1-\mathbf{H}_{ii}}
+$$
+
+so
+$$
+\left(\boldsymbol{\beta}_{(i)} - \boldsymbol{\beta}\right)^\intercal (\mathbf{X}^\intercal \mathbf{X}) \left(\boldsymbol{\beta}_{(i)} - \boldsymbol{\beta}\right) = \frac{e_i^2 \mathbf{x}_i^\intercal(\mathbf{X}^\intercal \mathbf{X})^{-1}\mathbf{x}_i   }{(1-\mathbf{H}_{ii})^2}
+$$
+
+so
+$$
+D_i := \frac{\left(\boldsymbol{\beta}_{(i)} - \boldsymbol{\beta}\right)^\intercal (\mathbf{X}^\intercal \mathbf{X}) \left(\boldsymbol{\beta}_{(i)} - \boldsymbol{\beta}\right) }{p MS_{Res} } = \frac{e_i^2}{MS_{Res }(1-\mathbf{H}_{ii}) } \frac{ \mathbf{H}_{ii}   }{p (1-\mathbf{H}_{ii})} = \frac{r_i^2}{p} \frac{\mathbf{H}_{ii}}{1 - \mathbf{H}_{ii}}
+$$
+
+## Plotting Cook's D
+
+```{r, echo=F}
+data("mtcars")
+carsdf <- mtcars[,-c(8:11)]
+```
+
+Cook's Distance doesn't have a nice sampling distribution (roughly $F$-distributed). Care if an observation has one above $1$.
+
+```{r, echo=T, out.width="600px"}
+fullMod <- lm(mpg ~ ., data = carsdf)
+# plot(fullMod) # will allow you to cycle through afew plots interactively!
+plot(fullMod, which=5)
+```
+
+
+## DFFITS and DFBETAS
+
+Cook's D measures overall influence of each observation.
+
+DFFITS and DFBETAS measure influence of each observation **on a particular coefficient, or a particular predicted value**.

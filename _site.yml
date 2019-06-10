@@ -1,4 +1,5 @@
 name: "6021 Notes"
+output_dir: "."
 navbar:
   title: "6021 Notes"
   type: inverse

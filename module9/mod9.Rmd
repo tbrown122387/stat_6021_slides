@@ -1,0 +1,589 @@
+---
+title: Module 9
+subtitle: STAT 6021
+author: Taylor R. Brown, PhD
+output: slidy_presentation
+---
+
+
+## Logistic Regression: Motivation
+
+So far we've assumed $y$ is normal. In particular it is continuous and takes values on $\mathbb{R}$. 
+\newline
+
+What if $y_i \in \{0,1\}$? Can we still use 
+
+$$
+y_i = \mathbf{x}_i^\intercal \boldsymbol{\beta} + \epsilon_i?
+$$
+
+
+
+## Logistic Regression: Motivation
+
+So far we've assumed $y$ is normal. In particular it is continuous and takes values on $\mathbb{R}$. 
+\newline
+
+What if $y_i \in \{0,1\}$? Can we still use 
+
+$$
+y_i = \mathbf{x}_i^\intercal \boldsymbol{\beta} + \epsilon_i?
+$$
+
+Problems:
+
+- $y_i$ is a Bernoulli rv
+- its average $p_i \in [0,1]$, 
+- but $\beta_0 + \beta_1 x \in \mathbb{R}$
+- its variance $p_i(1-p_i)$ isn't constant
+- the errors can't be normal
+
+
+
+
+
+## Two Special Functions
+
+Two special functions: the **logit function,** and the **inverse logit** (aka **logistic sigmoid** function). 
+
+
+The logit function expands a probability to lie on the real line.
+
+$$
+\text{logit} : [0,1] \to \mathbb{R}
+$$
+
+
+The inverse logit function "squashes" a real number into a probability ("sigmoid" means s-shaped).
+
+$$
+\text{invlogit} : \mathbb{R} \to [0,1] 
+$$
+
+
+## Two Special Functions
+
+
+1. $\text{logit}(p) : [0,1] \to \mathbb{R}$
+$$
+\text{logit}(p) = \log\left( \frac{p}{1-p}\right)
+$$
+
+```{r, echo=TRUE}
+library(boot) # for logit()
+ps <- seq(0, 1, .001)
+plot(ps, logit(ps), type ="l", xlab = "p", ylab = "logit(p)")
+```
+
+
+
+## Two Special Functions
+
+
+1. $\text{invlogit}(p) : \mathbb{R} \to [0,1]$
+$$
+\text{invlogit}(x) =  \frac{e^x}{1+e^x} = \frac{1}{1 + e^{-x}}
+$$
+
+```{r, echo=TRUE}
+library(boot) # for inv.logit()
+xs <- seq(-5, 5, .001)
+plot(xs, inv.logit(xs), type ="l", xlab = "x", ylab = "invlogit(x)")
+```
+
+
+## Two Special Functions
+
+As the names suggest, they are inverses of each other:
+
+$$
+\text{invlogit}[\text{logit}(p)] = \frac{ 1 }{1 -(1-p)/p} = p 
+$$
+
+Also, note that 
+$$
+1 - \text{invlogit}(x) = \text{invlogit}(-x)
+$$
+
+
+## Model Specification
+
+So there are two ways to write our model. Each $y_i \sim \text{Bernoulli}(\pi_i )$ where $\pi_i = P(y_i = 1 \mid \mathbf{x}_i, \boldsymbol{\beta})$ and where
+
+$$
+\text{logit}(\pi_i) = \mathbf{x}_i^\intercal \boldsymbol{\beta}
+$$
+
+or equivalently
+
+$$
+\pi_i = \text{invlogit}(\mathbf{x}_i^\intercal \boldsymbol{\beta} )
+$$
+
+## Maximum Likelihood Estimation (MLE)
+
+First, let's write down the likelihood:
+
+$$
+L(\mathbf{y} ; \mathbf{X}, \boldsymbol{\beta}) = \prod_{i=1}^n f(y_i ; \mathbf{x}_i, \boldsymbol{\beta}) = \prod_{i=1}^n \pi_i^{y_i}(1-\pi_i)^{1-y_i} = \prod_{i=1}^n\left( \frac{\pi_i}{1-\pi_i}\right)^{y_i} (1 - \pi_i)
+$$
+
+
+## Maximum Likelihood Estimation (MLE)
+
+
+Now the log-likelihood from $L(\mathbf{y} ; \mathbf{X}, \boldsymbol{\beta}) = \prod_{i=1}^n\left( \frac{\pi_i}{1-\pi_i}\right)^{y_i} (1 - \pi_i)$
+
+\begin{align*}
+\log L(\mathbf{y} ; \mathbf{X}, \boldsymbol{\beta}) &= \sum_{i=1}^n y_i \log \left( \frac{\pi_i}{1-\pi_i}\right) + \log(1-\pi_i) \\
+&= \sum_{i=1}^n y_i \text{logit} \left( \pi_i \right) + \log(1-\pi_i) \\
+&= \sum_{i=1}^n y_i \mathbf{x}_i^\intercal \boldsymbol{\beta} + \log( 1 - \text{invlogit}(\mathbf{x}_i^\intercal \boldsymbol{\beta} )) \\
+&= \sum_{i=1}^n y_i \mathbf{x}_i^\intercal \boldsymbol{\beta} + \log( \text{invlogit}( - \mathbf{x}_i^\intercal \boldsymbol{\beta} )) \\
+&= \sum_{i=1}^n y_i \mathbf{x}_i^\intercal \boldsymbol{\beta} - \log( 1 + \exp[ \mathbf{x}_i^\intercal \boldsymbol{\beta}] ))
+\end{align*}
+
+
+## Maximum Likelihood Estimation (MLE)
+
+Now take the derivatives of $\ell(\boldsymbol{\beta}) = \log L(\mathbf{y} ; \mathbf{X}, \boldsymbol{\beta}) = \sum_{i=1}^n y_i \mathbf{x}_i^\intercal \boldsymbol{\beta} - \log( 1 + \exp[ \mathbf{x}_i^\intercal \boldsymbol{\beta}])$
+
+$$
+\nabla \ell(\boldsymbol{\beta}) = \sum_{i=1}^n y_i \mathbf{x}_i - \frac{1}{( 1 + \exp[ \mathbf{x}_i^\intercal \boldsymbol{\beta}] ) }\mathbf{x}_i  \overset{\text{set}}{=} \mathbf{0}
+$$
+
+- No way to solve for $\boldsymbol{\beta}$
+
+- Need an iterative algorithm (e.g. gradient descent/ascent, Newton's method)
+
+- solution guaranteed ($\ell$ is concave, $-\ell$ is convex)
+
+
+## using `R`
+
+```{r, echo=F}
+library(boot)
+myDf <- read.csv("candy-data.csv")[,c(2,11)]
+myDf[,2] <- logit(myDf[,2])
+colnames(myDf)[2] <- "sugar_amount"
+myDf <- myDf[order(myDf[,2]),]
+```
+
+```{r, out.width="300px"}
+mod <- glm(chocolate ~ sugar_amount, family = binomial(link = "logit"), data = myDf)
+plot(myDf$sugar_amount, myDf$chocolate)
+lines(myDf$sugar_amount, predict(mod, type = "response"), type = "l", col = "red")
+```
+
+`predict(mod, type = "response")` gives $\hat{y}_i$
+
+## using `R`
+
+```{r, out.width="300px"}
+left <- -13
+right <- 13
+plot(myDf$sugar_amount, myDf$chocolate, xlim = c(left, right))
+grid <- seq(left, right, .001)
+preds <- predict(mod, list(sugar_amount = grid), type = "response")
+lines(grid, preds, type = "l", col = "red")
+```
+
+What do you think $\hat{\beta}_1$ is?
+
+
+## using `R`
+
+```{r}
+summary(mod)
+```
+
+
+## Interpreting Estimates
+
+Say you have an estimate $\hat{\beta}_3 = -1.6$. What does that even mean?
+
+
+## Interpreting Estimates
+
+Ignoring row numbers, recall that
+$$
+\log\left( \frac{\pi}{1-\pi}\right) = \beta_0 + \beta_1 x_{1} + \beta_2 x_{2} + \beta_3 x_{3} \tag{1}
+$$
+
+When only the third predictor changes...
+$$
+\log\left( \frac{ \tilde{\pi}}{1-\tilde{\pi}} \right) = \beta_0 + \beta_1 x_{1} + \beta_2 x_{2} + \beta_3 \tilde{x}_{3} \tag{2}
+$$
+
+Subtracting (1) from (2)
+$$
+\log\left(\frac{ \tilde{\pi}}{1-\tilde{\pi}} \bigg/  \frac{\pi}{1-\pi} \right) = \beta_3 ( x_{3} - \tilde{x}_{3} ) 
+$$
+
+
+## Interpreting Estimates
+
+$$
+\log\left(\frac{ \tilde{\pi}}{1-\tilde{\pi}} \bigg/  \frac{\pi}{1-\pi} \right) = \beta_3 ( x_{3} - \tilde{x}_{3} ) 
+$$
+
+For a one unit change in $x_3$, $\beta_3$ tells us the change in the log-odds, or the log odds ratio.
+
+
+## Hypothesis Testing with GLMs
+
+We now learn about how to test parameters. 
+
+All of these methods will be **asymptotic**, which means they're only valid when you have "enough" rows/observations.
+
+However, they can all be applied to other types of generalized linear models (GLMs) (e.g. Poisson regression, Gamma regression, multinomial regression, etc.)
+
+
+## Likelihood Ratio Tests 
+
+Here's a slide from my old STAT 3120 class:
+\[
+-2 \log \left( \frac{ \sup_{\theta \in \Theta_0} f(x_1, \ldots, x_n ; \theta)}{ \sup_{\theta \in \Theta} f(x_1, \ldots, x_n ; \theta)}\right)  \overset{\text{approx.}}{\sim} \chi^2_{\nu}
+\]
+
+where $\nu$ is the number of parameters involved in the null hypothesis
+
+The numerator is the likelihood with the maximum likelihood estimates plugged in for the **smaller** model. 
+
+The denominator is the likelihood with the maximum likelihood estimates plugged in for the **larger** model. 
+
+
+
+## Likelihood Ratio Tests 
+
+The book writes it this way:
+
+Under $H_0: \text{RM is correct}$, the test statistic has the following sampling distribution:
+
+
+$$
+LR = 2 \log \left(\frac{L(FM)}{L(RM) }\right) \overset{\text{approx.}}{\sim} \chi^2_{\nu}
+$$
+where $\nu$ is the number of extra parameters in the full model. This fraction/test-statistic is called the **deviance**. 
+
+This gives us the **likelihood-ratio tests**, which assumes that **the sample size is large**.
+
+## Likelihood Ratio Tests 
+
+$$
+LR = 2 \log\left( \frac{L(FM)}{L(RM) } \right)\overset{\text{approx.}}{\sim} \chi^2_{\nu}
+$$
+
+We reject the null that the smaller model is true when the test statistic is "large"
+
+$$
+LR > \chi^2_{\nu, \alpha}
+$$
+
+or equivalently when the "p-value is low"
+$$
+P(\chi^2_{\nu} \ge LR) < \alpha.
+$$
+
+## Likelihood Ratio Tests (example 1)
+
+The **null model**:
+
+$$
+\text{logit}(\pi_i) = \beta_0 
+$$
+
+versus the **alternative model**
+
+$$
+\text{logit}(\pi_i) = \beta_0 + \beta_1 x_i
+$$
+
+```{r}
+reducedMod <- glm(chocolate ~ 1, data = myDf, family = binomial(link = "logit"))
+fullMod <- glm(chocolate ~ sugar_amount, data = myDf, family = binomial(link = "logit"))
+anova(reducedMod, fullMod) # remember: models must be "nested"
+1-pchisq(1.4433, 1) #don't reject and keep small model
+```
+
+## Likelihood Ratio Tests (example 2)
+
+A **goodness-of-fit** test uses the same methodology to test your chosen model, which is assumed true under the null hypothesis, against a **saturated model**.
+
+To find the saturated model, we give each row it's own coefficent. So $\boldsymbol{\beta} \in \mathbb{R}^n$ and the design matrix is
+$$
+\mathbf{X}\boldsymbol{\beta} = 
+\begin{bmatrix}
+1 & 0 & \cdots & 0\\
+0 & 1 & \cdots & 0\\
+\vdots & \vdots & \ddots & \vdots \\
+0 & 0 & \cdots & 1\\
+\end{bmatrix}
+\begin{bmatrix}
+\beta_1 \\
+\beta_2 \\
+\vdots \\
+\beta_n
+\end{bmatrix}
+$$
+
+And then we solve the same equation we mentioned before:
+$$
+\nabla \ell(\boldsymbol{\beta}) = \sum_{i=1}^n y_i \mathbf{x}_i - \frac{1}{( 1 + \exp[ \mathbf{x}_i^\intercal \boldsymbol{\beta}] ) }\mathbf{x}_i  \overset{\text{set}}{=} \mathbf{0}
+$$
+
+
+
+## Likelihood Ratio Tests (example 2)
+
+Note $\mathbf{x}_i^\intercal \boldsymbol{\beta} = \beta_i$. We must solve the following
+
+$$
+\nabla \ell(\boldsymbol{\beta}) = \sum_{i=1}^n y_i \mathbf{x}_i - \frac{1}{( 1 + \exp[ \mathbf{x}_i^\intercal \boldsymbol{\beta}] ) }\mathbf{x}_i  \overset{\text{set}}{=} \mathbf{0}.
+$$
+looking at $\beta_j$:
+$$
+\sum_{i=1}^n y_i x_{i,j} = \sum_{i=1}^n\frac{1}{( 1 + \exp[ \mathbf{x}_i^\intercal \boldsymbol{\beta}] ) }x_{i,j}  
+$$
+
+
+which can only be true if for each observation $i$:
+$$
+y_i = \frac{1}{( 1 + \exp[ \beta_i ] ) }
+$$
+
+or in other words each $\beta_i$ is plus or minus infinity (if $y_i$ is $1$ or $0$, respectively. Verify that the maximized log-likelihood is $0$!
+
+## Likelihood Ratio Tests (example 3)
+
+
+Instead of comparing your **single** model to a small or large model, hypothesis testing can be done for two reasonable models. Say 
+
+$$
+\mathbf{X} \boldsymbol{\beta} = \underbrace{\mathbf{X}_1}_{p-r \text{ cols}} \boldsymbol{\beta}_1 + \underbrace{\mathbf{X}_2}_{r \text{ cols}} \boldsymbol{\beta}_2
+$$
+
+and our hypotheses are
+
+$$
+H_0: \boldsymbol{\beta}_2 = \mathbf{0}
+$$
+
+$$
+H_a: \boldsymbol{\beta}_2 \neq \mathbf{0}
+$$
+
+Again, under the null
+$$
+LR = 2 \log\left( \frac{L(FM)}{L(RM) } \right)\overset{\text{approx.}}{\sim} \chi^2_{\nu}
+$$
+
+## Likelihood Ratio Tests (example 3)
+
+```{r, echo=T}
+myDf$sugar_amount_squared <- myDf$sugar_amount^2
+reducedMod <- glm(chocolate ~ 1, data = myDf, family = binomial(link = "logit"))
+fullMod <- glm(chocolate ~ sugar_amount + sugar_amount_squared, data = myDf, family = binomial(link = "logit"))
+(test_results <- anova(reducedMod, fullMod)) # parentheses around assignment add printing
+1-pchisq(test_results$Deviance[2], test_results$Df[2]) 
+```
+
+
+## Wald Tests
+
+We also have tests on individual coefficients. The null and alternative hypotheses would be of the form
+
+$$
+H_0: \beta_j = 0 \text{  versus  } H_a: \beta_j \neq 0
+$$
+
+
+These will be called **Wald Tests**, and they are based on a theorem you prove in a mathematical statistics class that shows the MLEs are asymptotically unbiased, have the lowest possible variance, and are normally distributed!
+
+```{r, out.width="100px", echo=F}
+knitr::include_graphics("Abraham_Wald.jpg")
+```
+
+
+## Wald Tests
+
+Asymptotic unbiasedness is the easier part: $E\left[\hat{\boldsymbol{\beta}} \right] \approx \boldsymbol{\beta}$. The covariance matrix has to do with the matrix of second derivatives
+
+$$
+V\left[\hat{\boldsymbol{\beta}}  \right] \approx [-\mathbf{G}]^{-1}
+$$
+
+- $\ell( \hat{\boldsymbol{\beta}} )$ is the log-likelihood with the MLE plugged in
+
+- $\mathbf{G}_{ij} = \frac{\partial^2 \log L(\hat{\boldsymbol{\beta}})}{\partial \beta_i \partial \beta_j}$ is the **Hessian matrix**
+
+- $\mathbf{G}$ is negative definite because the log-likelihood is convex
+
+- that means $-\mathbf{G}$ is positive definite (akin to Fisher Information Matrix)
+
+- $[-\mathbf{G}]^{-1}$ is akin to the Cramér–Rao bound
+
+
+## Wald Tests: Understanding the Hessian
+
+Why this is so cool:
+
+- the Hessian matrix is output from many optimization algorithms
+
+- this approach is justified for nearly all maximum likelihood estimation procedures, which is the most common estimation technique
+
+- data is usually large, so not very restrictive
+
+- no model-specific derivations (always normally distributed)
+
+
+
+## Wald Tests: Understanding the Hessian
+
+Why does the book write $-\mathbf{G}^{-1} = -[\nabla^2 \ell( \hat{\boldsymbol{\beta}} )] ^{-1} = (\mathbf{X}^\intercal \mathbf{V} \mathbf{X})^{-1}$?
+
+
+
+
+## Wald Tests: Understanding the Hessian
+
+Why does the book write $-\mathbf{G}^{-1} = -[\nabla^2 \ell( \hat{\boldsymbol{\beta}} )] ^{-1} = (\mathbf{X}^\intercal \mathbf{V} \mathbf{X})^{-1}$?
+
+
+Recall
+
+$$
+\nabla \ell(\boldsymbol{\beta}) = \sum_{i=1}^n y_i \mathbf{x}_i - \frac{1}{( 1 + \exp[ \mathbf{x}_i^\intercal \boldsymbol{\beta}] )) }\mathbf{x}_i 
+$$
+
+So
+\begin{align*}
+\nabla^2 \ell( \hat{\boldsymbol{\beta}} )
+&= 
+\sum_{i=1}^n \frac{\exp[ \mathbf{x}_i^\intercal  \hat{\boldsymbol{\beta}}  ] }{( 1 + \exp[ \mathbf{x}_i^\intercal  \hat{\boldsymbol{\beta}} ] )^2 }\mathbf{x}_i\mathbf{x}_i^\intercal  \\
+&=
+\mathbf{X}^\intercal
+\begin{bmatrix}
+\frac{\exp[ \mathbf{x}_1^\intercal  \hat{\boldsymbol{\beta}}  ] }{( 1 + \exp[ \mathbf{x}_1^\intercal \hat{\boldsymbol{\beta}}  ] )^2} &  \cdots & 0\\
+\vdots & \ddots & \vdots \\
+0 & \cdots & \frac{\exp[ \mathbf{x}_n^\intercal  \hat{\boldsymbol{\beta}} ] }{( 1 + \exp[ \mathbf{x}_n^\intercal  \hat{\boldsymbol{\beta}}  ] )^2}
+\end{bmatrix}
+\mathbf{X} \\
+\end{align*}
+
+
+## Wald Tests: using `R`
+
+Standard errors come from taking the square root of the diagonal element of the covariance matrix:
+$$
+\hat{\beta}_j \pm z_{\alpha/2} \underbrace{\text{SE}(\hat{\beta}_j)}_{ \text{standard error}}
+$$
+
+```{r}
+confint(fullMod)
+```
+
+
+## Wald Tests: using `R`
+
+`summary` gives us the Wald hypothesis tests for individual parameters
+```{r}
+summary(fullMod)
+```
+
+
+## So many deviances!
+
+Why is there a **null deviance**, and a **residual deviance**?
+
+This is related to what we had with regular linear regression:
+$$
+\sum_{i=1}^n(y_i - \bar{y})^2 = \sum_{i=1}^n(y_i - \hat{y}_i)^2 + \sum_{i=1}^n(\hat{y}_i - \bar{y})^2?
+$$
+
+
+## So many deviances
+
+**Null deviance** is kind of like $SS_T$
+$$
+2 \log\left(\frac{L(\text{saturated model})}{L(\text{null model}) }\right)
+$$
+
+**Residual deviance** is kind of like $SS_{Res}$
+$$
+2 \log\left( \frac{L(\text{saturated model})}{L(\text{your model}) }\right)
+$$
+
+
+## So many deviances
+
+- **Null deviance** : $2 \log\left(\frac{L(\text{saturated model})}{L(\text{null model}) }\right)$
+
+- **Residual deviance**: $2 \log\left( \frac{L(\text{saturated model})}{L(\text{your model}) }\right)$
+
+
+So 
+$$
+2 \log\left(\frac{L(\text{saturated model})}{L(\text{null model})}\right) = 2 \log\left(\frac{L(\text{saturated model})}{L(\text{your model})}\right) - 2 \log \left( \frac{L(\text{your model})}{L(\text{null model})}\right)
+$$
+
+kind of like $SS_T = SS_R + SS_{Res}$!
+
+
+## Another thing: Linearly-Separable Data
+
+Assume one predictor, no intercept
+$$
+\pi = \text{invlogit}(x \beta)
+$$
+
+What do we think $\beta$ is?
+
+```{r, echo=F, out.width="400px"}
+sepXDat <- seq(-1,1, .01)
+sepYDat <- as.numeric(sepXDat > 0)
+plot(sepXDat, sepYDat, type = "p")
+```
+
+
+## Another thing: Linearly-Separable Data
+
+$$
+\pi = \text{invlogit}(x \beta)
+$$
+
+Recall 
+
+- if $x \beta = \infty$, then $\text{invlogit}(x \beta) = 1$, and
+- if $x \beta = -\infty$, then $\text{invlogit}(x \beta) = 0$.
+
+So for this linearly-separable data set:
+
+- $x \beta  = \infty$ when $y = 1$ and $x > 0$
+- $x \beta  = -\infty$ when $y = 0$ and $x \le 0$.
+
+Or in other words $\beta = \infty$
+
+## Another thing: Linearly-Separable Data
+
+
+```{r, echo=T, out.width="400px"}
+sepXDat <- seq(-1,1, .01)
+sepYDat <- as.numeric(sepXDat > 0)
+plot(sepXDat, sepYDat, type = "p")
+for(beta in 2:20)
+  lines(sepXDat, inv.logit(beta*sepXDat))
+```
+
+
+
+## using `R`
+In `R`:
+```{r, echo=T}
+glm(sepYDat ~ sepXDat, family = binomial(link = "logit"))
+```
+
+
+## Linearly-Separable Data
+
+
+So `R` isn't making a mistake, and the math isn't wrong, but in practice, **this probably means you are overfitting**

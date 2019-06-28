@@ -59,7 +59,7 @@ Notice that this vector sums to $1$, so it gives us probabilities for $m+1$ cate
 
 ## Example 1
 
-In **multinomial logistic regression**, you have $\mathbf{x}_i^\intercal \in \mathbb{R}^p$, but now you have more $p$-dimensional coefficient vectors because you have more categories.
+In **multinomial logistic regression**, you have each $\mathbf{x}_i \in \mathbb{R}^p$, but now you have more $p$-dimensional coefficient vectors because you have more categories.
 
 Assume you have $\boldsymbol{\beta}^{(0)}, \boldsymbol{\beta}^{(1)}, \ldots, \boldsymbol{\beta}^{(m)}$. For each row $i$ you could take the softmax of $\begin{bmatrix}\mathbf{x}_i^\intercal \boldsymbol{\beta}^{(0)} & \mathbf{x}_i^\intercal \boldsymbol{\beta}^{(1)} & \cdots & \mathbf{x}_i^\intercal \boldsymbol{\beta}^{(m)} \end{bmatrix}^\intercal$ yielding
 
@@ -81,7 +81,7 @@ $$
 
 ## Example 1
 
-However, the likelihood is not **identifiable** because multiple parameter collections will give the same likelihood. For example, shifting all the coefficient vectors by the same vector $\mathbf{c}$ will produce the same likelihood. This can be seen if you multiply each the numerator and denominator of each element of the vector by a constant $\exp[-\mathbf{x}_i^\intercal \mathbf{c}]$, nothing changes:
+However, the likelihood is not **identifiable** because multiple parameter collections will give the same likelihood. For example, shifting all the coefficient vectors by the same vector $\mathbf{c}$ will produce the same likelihood. This can be seen if you multiply the numerator and denominator of each element of the vector by a constant $\exp[-\mathbf{x}_i^\intercal \mathbf{c}]$, nothing changes:
 
 $$
 \begin{bmatrix}
@@ -134,7 +134,7 @@ $$
 
 ## Example 1
 
-It is convenient to use category $0$ as a **baseline** because we can get logits (log-odds) using some simple algebra on the previous equation:
+Using category $0$ as a **baseline**, we can get logits (log-odds) using some simple algebra on the previous equation:
 
 $$
 \begin{bmatrix}
@@ -174,12 +174,16 @@ myModel <- multinom(prog2 ~ write, data = ml)
 summary(myModel) # the standard errors are Wald std errors
 ```
 
-
 ## Example 2
 
 If our response $y_i \in \{0, 1, 2, \ldots, m\}$ is **ordinal** (think "order") then the order matters for the categories (e.g. low, medium, high blood pressure).
 
-In the case of **ordinal logistic regression**, it changes a little bit. Assume $\mathbf{x}_i$ doesn't have an intercept term. Each group will get it's own intercept:
+We can use **ordinal logistic regression** for this setup.
+
+
+## Example 2
+
+In the case of **ordinal logistic regression**, things change a little. Assume $\mathbf{x}_i$ doesn't have an intercept term. Each group will get it's own intercept:
 
 $$
 \begin{bmatrix}
@@ -242,7 +246,7 @@ $$
 
 Also notice that 
 $$
-P(y_i \le k) \le P(y_i \le k+1)
+\frac{\exp\left[ \alpha_k + \mathbf{x}_i^\intercal \boldsymbol{\beta} \right]}{ 1 + \exp\left[ \alpha_k + \mathbf{x}_i^\intercal \boldsymbol{\beta} \right] } = P(y_i \le k)  \le P(y_i \le k+1) = \frac{\exp\left[ \alpha_{k+1} + \mathbf{x}_i^\intercal \boldsymbol{\beta} \right]}{ 1 + \exp\left[ \alpha_{k+1} + \mathbf{x}_i^\intercal \boldsymbol{\beta} \right] }
 $$
 so
 $$
@@ -515,7 +519,7 @@ $$
 $$
 where $\mathbf{G}$ is the hessian, or matrix of second derivatives.
 
-- you can have this calculated numerically (e.g. `vcov` or a `hessian=TRUE` argument)
+- you can have this calculated numerically (e.g. `vcov()` or a `hessian=TRUE` argument)
 - derive it for general exponential families (we do that now)
 
 ## GLMs
@@ -548,7 +552,7 @@ $$
 \nabla^2 \ell(\boldsymbol{\beta}) = \frac{1}{a(\phi)}\sum_{i=1}^n  -\mathbf{x}_i\mathbf{x}_i^\intercal [g^{-1}]^{''}(\mathbf{x}_i^\intercal \boldsymbol{\beta} ) = - \frac{1}{a(\phi)} (\mathbf{X}^\intercal \mathbf{V} \mathbf{X} )
 $$
 
-so the variance is the negative of the inverse of this matrix above:
+so the variance is the negative of the inverse of this matrix above (as seen on page 455):
 $$
 \text{V}(\hat{\boldsymbol{\beta}}) = a(\phi) (\mathbf{X}^\intercal \mathbf{V} \mathbf{X} )^{-1}.
 $$
@@ -574,9 +578,35 @@ $$
 \text{V}(g(\hat{y}_0)) = \text{V}(\mathbf{x}_0^\intercal\hat{\boldsymbol{\beta}}) = a(\phi) \mathbf{x}_0^\intercal(\mathbf{X}^\intercal \mathbf{V} \mathbf{X} )^{-1}\mathbf{x}_0
 $$
 
-so an interval for the mean response is 
+## prediction!
+
 $$
-[g^{-1}\left(\mathbf{x}_0^\intercal \hat{\boldsymbol{\beta}} - z_{\alpha/2}\sqrt{\text{V}(\mathbf{x}_0^\intercal\hat{\boldsymbol{\beta}})} \right) , g^{-1}\left(\mathbf{x}_0^\intercal \hat{\boldsymbol{\beta}} + z_{\alpha/2}\sqrt{\text{V}(\mathbf{x}_0^\intercal\hat{\boldsymbol{\beta}})} \right)]
+\text{V}(g(\hat{y}_0)) = \text{V}(\mathbf{x}_0^\intercal\hat{\boldsymbol{\beta}}) = a(\phi) \mathbf{x}_0^\intercal(\mathbf{X}^\intercal \mathbf{V} \mathbf{X} )^{-1}\mathbf{x}_0 
 $$
 
-TODO: R example
+Because
+$$
+-z_{\alpha/2} \le \frac{g(\hat{y}_0) - g(y_0) }{\sqrt{\text{V}(\mathbf{x}_0^\intercal\hat{\boldsymbol{\beta}})} } \le z_{\alpha/2}
+$$
+has probability $1-\alpha$, an interval for the mean response is 
+$$
+\left[ g^{-1}\left(\mathbf{x}_0^\intercal \hat{\boldsymbol{\beta}} - z_{\alpha/2}\sqrt{\text{V}(\mathbf{x}_0^\intercal\hat{\boldsymbol{\beta}})} \right) , g^{-1}\left(\mathbf{x}_0^\intercal \hat{\boldsymbol{\beta}} + z_{\alpha/2}\sqrt{\text{V}(\mathbf{x}_0^\intercal\hat{\boldsymbol{\beta}})} \right) \right]
+$$
+
+
+## using `R`
+
+```{r, echo=F}
+library(boot)
+myDf <- read.csv("candy-data.csv")[,c(2,11)]
+myDf[,2] <- logit(myDf[,2])
+colnames(myDf)[2] <- "sugar_amount"
+myDf <- myDf[order(myDf[,2]),]
+```
+
+`predict()` gave us fitted values last module, but it can also predict on new observations and calculate the standard errors $\sqrt{\text{V}(\mathbf{x}_0^\intercal\hat{\boldsymbol{\beta}})}$
+```{r, out.width="300px"}
+mod <- glm(chocolate ~ sugar_amount, family = binomial(link = "logit"), data = myDf)
+myNewData <- data.frame(sugar_amount = c(4, 4.5))
+predict(mod, type = "response", newdata = myNewData, se.fit = T)
+```

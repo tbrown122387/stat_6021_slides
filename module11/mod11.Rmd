@@ -203,28 +203,22 @@ $$
 
 Reject when this is low!
 
-
-The test is weird because
-
-- sometimes it's inconclusive
-- it's hard to find rejection regions/critical values analytically 
-- the alternative is positive autocorr only (you can easily invert everything, though)
-
-
-## A Hypothesis Test
-
-
 ```{r, echo=F, out.width = "600px"}
 knitr::include_graphics("durbin_cutoffs.png")
 ```
 
+
 ## using `R`
 
-`R`'s `dwtest` has an involved algorithm for finding the p-values called "Pan's algorithm"
+`R`'s `dwtest()` has an involved algorithm for finding the p-values called "Pan's algorithm"
+
+```{r, echo=F}
+suppressMessages(library(lmtest))
+```
+
 
 ```{r}
-library(lmtest)
-dwtest(lm(y ~ x), alternative = "greater")
+dwtest(lm(y ~ x), alternative = "greater") # need library(lmtest)
 ```
 
 
@@ -321,3 +315,129 @@ corrErrorMod$coef # phi, beta0, beta1
 summary(lm(y ~ x)) # estimates are pretty close to simple ols model
 ```
 
+
+## The Bootstrap
+
+And now for something totally different: **the bootstrap**, which is a class of computationally-intensive techniques to find confidence or prediction intervals, or perform hypothesis tests. 
+
+
+
+## The Bootstrap
+
+"Bootstrap" is a pretty vague word that can refer to probably hundreds of different procedures, but what they all have in common is that they **sample with replacement** $m$ times from the existing data set. 
+
+```{r, echo=F, out.width="700px"}
+knitr::include_graphics("sample_with_replacement.png")
+```
+
+[img source](https://stats.stackexchange.com/questions/246726/size-of-bootstrap-samples/246734)
+
+
+## The Bootstrap
+
+This approximates having $m$ independent fresh data sets that are generated randomly under the same conditions. If we had many data sets, we wouldn't need to derive the distribution of $\hat{\beta}$...we could just look at a histogram!
+
+
+## The Bootstrap
+
+
+The book describes two ways to use bootstrapping for regression models. The first is **bootstrapping cases**.
+
+Say your data set is $\{ (y_i, \mathbf{x}_i)\}_{i=1}^n$. For $j=1,\ldots, m$ times:
+
+1. sample with replacement to get $\{ (y_i^*, \mathbf{x}^*_i)\}_{i=1}^n$ (same size)
+2. fit a regression with this bootstrapped data
+3. store the estimated regression regression coefficient $\boldsymbol{\hat{\beta}}_j^*$
+
+
+Then, look at the histogram of $\{\boldsymbol{\hat{\beta}}_j^*\}_{j=1}^m$!
+
+
+
+## using `R`
+
+A little experiment: generate some fake data and see how the bootstrap compares!
+```{r}
+n <- 50
+true_beta0 <- -2
+true_beta1 <- 3
+true_sigma_squared <- 5
+x <- seq(0,100, length.out = n)
+y <- true_beta0 + true_beta1*x + rnorm(n = n, mean = 0, sd = sqrt(true_sigma_squared))
+```
+
+
+## using `R`
+
+`sample()` or `sample.int()` are the workhorses
+```{r}
+random_indexes <- sample.int(length(x), replace=TRUE) # need replace=T
+sort(random_indexes) # just to show that some are repeating
+xstar <- x[random_indexes]
+ystar <- y[random_indexes]
+coefficients(lm(ystar ~ xstar))
+```
+
+
+## using `R`
+
+Do it over and over again. Say we're only interested in the intercept:
+
+```{r}
+bootstrap_once <- function(){
+  random_indexes <- sample.int(length(x), replace=TRUE) # need replace=T
+  xstar <- x[random_indexes]
+  ystar <- y[random_indexes]
+  return(coefficients(lm(ystar ~ xstar))[1])
+}
+m <- 1e3
+beta0Stars <- replicate(m, bootstrap_once())
+hist(beta0Stars)
+abline(v=true_beta0, col = "red") # true unknown 
+abline(v=coefficients(lm(y ~ x))[1], col ="green") # estimated from our sample
+abline(v=quantile(beta0Stars, .025), col = "blue") # bootstrap lower 
+abline(v=quantile(beta0Stars, .975), col = "blue") # bootstrap upper
+confint(lm(y ~ x)) # non bootstrapped intervals
+```
+
+
+## The Bootstrap
+
+
+The second way to bootstrap a regression model is **bootstrapping residuals**.
+
+Say your data set is $\{ (y_i, \mathbf{x}_i)\}_{i=1}^n$. Regress original $\mathbf{y}$ on original $\mathbf{X}$ to obtain residuals $\mathbf{e}$ and coefficient estimates $\boldsymbol{\hat{\beta}}$.
+
+For $j=1,\ldots, m$ times:
+
+1. sample with replacement to get $\mathbf{e}^*$ (same size)
+2. generate fake responses $\mathbf{y}^*$ using $\mathbf{y}^* = \mathbf{X}\boldsymbol{\hat{\beta}} + \mathbf{e}^*$
+3. regress new $\mathbf{y}^*$ on old $\mathbf{X}$ 
+3. store the estimated regression regression coefficients $\boldsymbol{\hat{\beta}}^*$
+
+
+Then, look at the histogram of $\{\boldsymbol{\hat{\beta}}_j^*\}_{j=1}^m$!
+
+
+
+## using `R`
+
+```{r}
+original_beta_hat <- as.matrix(coefficients(lm(y ~ x)))
+original_residuals <- residuals(lm(y ~ x))
+X <- matrix(c(rep(1,length(x)), x), ncol=2)
+bootstrap_resids_once <- function(){
+  random_indexes <- sample.int(length(x), replace=TRUE) # need replace=T
+  estar <- original_residuals[random_indexes]
+  ystar <- X %*% original_beta_hat + estar
+  return(coefficients(lm(ystar ~ x))[1])
+}
+m <- 1e3
+beta0Stars <- replicate(m, bootstrap_resids_once())
+hist(beta0Stars)
+abline(v=true_beta0, col = "red") # true unknown 
+abline(v=coefficients(lm(y ~ x))[1], col ="green") # estimated from our sample
+abline(v=quantile(beta0Stars, .025), col = "blue") # bootstrap lower 
+abline(v=quantile(beta0Stars, .975), col = "blue") # bootstrap upper
+confint(lm(y ~ x)) # non bootstrapped intervals
+```

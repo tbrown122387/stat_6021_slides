@@ -1,0 +1,323 @@
+---
+title: Module 12
+subtitle: STAT 6021
+author: Taylor R. Brown, PhD
+output: slidy_presentation
+---
+
+
+## Correlated Predictors
+
+Back in module 5 we discussed multicollinearity, and how that can lead to coefficient estimates that have a high variance. This was because
+
+$$
+\text{V}\left[\boldsymbol{\hat{\beta}} \right]= \sigma^2 (\mathbf{X}^\intercal \mathbf{X})^{-1}
+$$
+
+
+## Big Idea
+
+Recall from module 7:
+
+$$
+MSE(\hat{\boldsymbol{\beta}}_p) = V[\hat{\boldsymbol{\beta}}_p] + \text{Bias}[\hat{\boldsymbol{\beta}}_p]\text{Bias}[\hat{\boldsymbol{\beta}}_p]^\intercal
+$$
+
+- Regular OLS coefficients have no bias, so MSE equals the variance. 
+- **Ridge Regression** will add some bias, but may dramatically reduce variance.
+- It is also likely to improve prediction on out-of-sample data!
+
+## Ridge Regression
+
+```{r, out.width="700px", echo=F}
+knitr::include_graphics("bell_curves.png")
+```
+
+
+## Ridge Regression
+
+Add a penalty to the loss function:
+
+$$
+(\mathbf{y} - \mathbf{X}\boldsymbol{\beta})^\intercal(\mathbf{y} - \mathbf{X}\boldsymbol{\beta}) + k \boldsymbol{\beta}^\intercal \boldsymbol{\beta} 
+$$
+
+where $k \ge 0$ is the **biasing parameter**. Calling it $\lambda$ is popular in the literature, too. 
+
+Simplifying yields
+
+$$
+\mathbf{y}^\intercal \mathbf{y} - 2\mathbf{y}^\intercal \mathbf{X}\boldsymbol{\beta} +  \boldsymbol{\beta}^\intercal\left[ k \mathbf{I} + \mathbf{X}^\intercal \mathbf{X} \right] \boldsymbol{\beta}
+$$
+
+
+NB: for the moment, we are assuming that we don't have an intercept. More on this later.
+
+
+## Ridge Regression
+
+
+
+$$
+(\mathbf{y} - \mathbf{X}\boldsymbol{\beta})^\intercal(\mathbf{y} - \mathbf{X}\boldsymbol{\beta}) + k \boldsymbol{\beta}^\intercal \boldsymbol{\beta} 
+$$
+
+This sort of loss function can be motivated a number of ways. One way is we can think of finding the Lagrangian of this constrained optimization problem:
+
+\begin{gather}
+\min_{\boldsymbol{\beta}} (\mathbf{y} - \mathbf{X}\boldsymbol{\beta})^\intercal(\mathbf{y} - \mathbf{X}\boldsymbol{\beta}) \\
+\text{subject to  } \boldsymbol{\beta}^\intercal \boldsymbol{\beta} \le s
+\end{gather}
+
+The Lagrangian is 
+$$
+(\mathbf{y} - \mathbf{X}\boldsymbol{\beta})^\intercal(\mathbf{y} - \mathbf{X}\boldsymbol{\beta}) + k \left( \boldsymbol{\beta}^\intercal \boldsymbol{\beta} - t \right)
+$$
+but $kt$ doesn't matter. 
+
+## Ridge Regression
+
+```{r, echo=F, out.width="350px"}
+knitr::include_graphics("ridge_pic.png")
+```
+[source: ISLR](http://www-bcf.usc.edu/~gareth/ISL/)
+
+## Ridge Regression
+
+
+$$
+\mathbf{y}^\intercal \mathbf{y} - 2\mathbf{y}^\intercal \mathbf{X}\boldsymbol{\beta} +  \boldsymbol{\beta}^\intercal\left[ k \mathbf{I} + \mathbf{X}^\intercal \mathbf{X} \right] \boldsymbol{\beta}
+$$
+
+Taking derivatives and setting the resulting expression to $\mathbf{0}$ yields different normal equations:
+
+$$
+\left[k \mathbf{I} + \mathbf{X}^\intercal \mathbf{X} \right] \boldsymbol{\hat{\beta}}_R = \mathbf{X}^\intercal \mathbf{y}
+$$
+
+
+## Ridge Regression
+
+Solving 
+
+$$
+\left[ k \mathbf{I} + \mathbf{X}^\intercal \mathbf{X} \right] \boldsymbol{\hat{\beta}}_R = \mathbf{X}^\intercal \mathbf{y}
+$$
+
+yields
+$$
+\boldsymbol{\hat{\beta}}_R = (\mathbf{X}^\intercal \mathbf{X} + k\mathbf{I})^{-1} \mathbf{X}^\intercal \mathbf{y}
+$$
+
+c.f. regular OLS:
+
+$$
+\boldsymbol{\hat{\beta}} = (\mathbf{X}^\intercal \mathbf{X})^{-1} \mathbf{X}^\intercal \mathbf{y}
+$$
+
+
+## Ridge Regression
+
+
+- $\boldsymbol{\hat{\beta}}_R = (\mathbf{X}^\intercal \mathbf{X} + k\mathbf{I})^{-1} \mathbf{X}^\intercal \mathbf{y}$
+- $\boldsymbol{\hat{\beta}} = (\mathbf{X}^\intercal \mathbf{X})^{-1} \mathbf{X}^\intercal \mathbf{y}$
+
+The Ridge Regression estimate is a linear transformation of the OLS estimate
+
+$$
+\boldsymbol{\hat{\beta}}_R = (\mathbf{X}^\intercal \mathbf{X} + k\mathbf{I})^{-1} \mathbf{X}^\intercal \mathbf{y} = (\mathbf{X}^\intercal \mathbf{X} + k\mathbf{I})^{-1} (\mathbf{X}^\intercal \mathbf{X}) \boldsymbol{\hat{\beta}} = \mathbf{Z}_k \boldsymbol{\hat{\beta}}
+$$
+
+- this helps us find the bias vector and the covariance matrix.
+
+## Ridge Regression's Bias
+
+- $\boldsymbol{\hat{\beta}}_R = (\mathbf{X}^\intercal \mathbf{X} + k\mathbf{I})^{-1} \mathbf{X}^\intercal \mathbf{y}$
+- $\boldsymbol{\hat{\beta}} = (\mathbf{X}^\intercal \mathbf{X})^{-1} \mathbf{X}^\intercal \mathbf{y}$
+- $\boldsymbol{\hat{\beta}}_R = \mathbf{Z}_k \boldsymbol{\hat{\beta}}$
+- $\mathbf{Z}_k = (\mathbf{X}^\intercal \mathbf{X} + k\mathbf{I})^{-1}(\mathbf{X}^\intercal \mathbf{X})$
+
+$$
+E\left[ \boldsymbol{\hat{\beta}}_R \right] = \mathbf{Z}_kE\left[ \boldsymbol{\hat{\beta}} \right] = \mathbf{Z}_k \boldsymbol{\beta}
+$$
+
+
+## Ridge Regression's Variance
+
+- $\boldsymbol{\hat{\beta}}_R = (\mathbf{X}^\intercal \mathbf{X} + k\mathbf{I})^{-1} \mathbf{X}^\intercal \mathbf{y}$
+- $\boldsymbol{\hat{\beta}} = (\mathbf{X}^\intercal \mathbf{X})^{-1} \mathbf{X}^\intercal \mathbf{y}$
+- $\boldsymbol{\hat{\beta}}_R = \mathbf{Z}_k \boldsymbol{\hat{\beta}}$
+- $\mathbf{Z}_k = (\mathbf{X}^\intercal \mathbf{X} + k\mathbf{I})^{-1}(\mathbf{X}^\intercal \mathbf{X})$
+
+$$
+\text{V}\left[ \boldsymbol{\hat{\beta}}_R \right] = \mathbf{Z}_k \text{V}\left[ \boldsymbol{\hat{\beta}} \right]\mathbf{Z}_k^\intercal = \sigma^2 \mathbf{Z}_k \left(\mathbf{X}^\intercal \mathbf{X} \right)^{-1} \mathbf{Z}_k^\intercal = \sigma^2 (\mathbf{X}^\intercal \mathbf{X} + k\mathbf{I})^{-1}\left(\mathbf{X}^\intercal \mathbf{X} \right)(\mathbf{X}^\intercal \mathbf{X} + k\mathbf{I})^{-1}
+$$
+
+The book takes the trace of the following, which gives us the total variance (ignoring covariances).
+
+## The Spectral Representation Theorem 
+
+A special case of the **spectral representation theorem (for matrices)** states that any real, symmetric matrix is orthogonally diagonalizable. For us this means that
+$$
+\mathbf{X}^\intercal \mathbf{X} = \mathbf{U} \mathbf{D}\mathbf{U}^\intercal
+$$
+where 
+
+- the columns of $\mathbf{U}$ are the eigenvectors
+- $\mathbf{U}\mathbf{U}^\intercal  = \mathbf{U}^\intercal\mathbf{U} = \mathbf{I}$ (orthogonal)
+- $\mathbf{D} = \text{diag}\left(\lambda_1, \lambda_2, \ldots, \lambda_p \right)$ are the eigenvalues
+- positive definiteness implies that the eigenvalues are positive
+
+
+## Using The Spectral Representation Theorem 
+
+
+$$
+\mathbf{X}^\intercal \mathbf{X} = \mathbf{U} \mathbf{D}\mathbf{U}^\intercal
+$$
+
+
+This is helpful for us here because
+
+- $\mathbf{X}^\intercal \mathbf{X} + k\mathbf{I} = \mathbf{U}\left[ \mathbf{D} + k \mathbf{I} \right]\mathbf{U}^\intercal$
+- $[\mathbf{X}^\intercal \mathbf{X} + k\mathbf{I}]^{-1} = \mathbf{U}\left[ \mathbf{D} + k \mathbf{I} \right]^{-1}\mathbf{U}^\intercal$
+
+$$
+[\mathbf{X}^\intercal \mathbf{X} + k\mathbf{I}]^{-1}[\mathbf{X}^\intercal \mathbf{X}][\mathbf{X}^\intercal \mathbf{X} + k\mathbf{I}]^{-1} = 
+\mathbf{U}
+\begin{bmatrix}
+\frac{\lambda_1}{(\lambda_1 + k)^2 } & \cdots & 0 \\
+\vdots & \ddots & \vdots \\
+0 & \cdots & \frac{\lambda_p}{(\lambda_p + k)^2}
+\end{bmatrix}
+\mathbf{U}^\intercal
+$$
+
+Taking the trace on both sides gives us $\text{tr}\left(\text{V}\left[ \boldsymbol{\hat{\beta}}_R \right] \right) = \sigma^2 \sum_{i=1}^p \frac{\lambda_i}{(\lambda_i + k)^2}$
+
+
+## Using The Spectral Representation Theorem 
+
+
+- $\mathbf{X}^\intercal \mathbf{X} = \mathbf{U} \mathbf{D}\mathbf{U}^\intercal$
+- $\mathbf{X}^\intercal \mathbf{X} + k\mathbf{I} = \mathbf{U}\left[ \mathbf{D} + k \mathbf{I} \right]\mathbf{U}^\intercal$
+
+We can also see why they call $k$ the biasing parameter:
+
+
+$$
+E\left[ \boldsymbol{\hat{\beta}}_R - \boldsymbol{\beta} \right] = \mathbf{Z}_k - \mathbf{I}
+=
+\mathbf{U}
+\begin{bmatrix}
+\frac{\lambda_1}{\lambda_1 + k } & \cdots & 0 \\
+\vdots & \ddots & \vdots \\
+0 & \cdots & \frac{\lambda_p}{\lambda_p + k}
+\end{bmatrix}
+\mathbf{U}^\intercal - \mathbf{U}\mathbf{U}^\intercal
+=
+\mathbf{U}
+\begin{bmatrix}
+\frac{-k}{\lambda_1 + k } & \cdots & 0 \\
+\vdots & \ddots & \vdots \\
+0 & \cdots & \frac{-k}{\lambda_p + k}
+\end{bmatrix}
+\mathbf{U}^\intercal
+$$
+
+
+
+## More realistic
+
+In practice usually the intercept is not penalized. Instead we fix $k$ and choose $\hat{\boldsymbol{\beta}}_R$ to minimize
+
+$$
+(\mathbf{y} - \mathbf{X}\boldsymbol{\beta})^\intercal(\mathbf{y} - \mathbf{X}\boldsymbol{\beta}) + k \sum_{j=1}^p \beta_j^2,
+$$
+where the penalty term doesn't include $\hat{\boldsymbol{\beta}}_0$.
+
+$$
+\left[k \text{ diag}(0, 1, \ldots, 1) + \mathbf{X}^\intercal \mathbf{X} \right] \boldsymbol{\hat{\beta}}_R = \mathbf{X}^\intercal \mathbf{y}
+$$
+
+
+## More realistic
+
+$$
+\left[k \text{ diag}(0, 1, \ldots, 1) + \mathbf{X}^\intercal \mathbf{X} \right] \boldsymbol{\hat{\beta}}_R = \mathbf{X}^\intercal \mathbf{y}
+$$
+
+Notice the first row is the same as the OLS:
+$$
+\sum_{i} y_i = n \hat{\beta}_0 + \hat{\beta}_1  \sum_i x_{1i} + \cdots + \hat{\beta}_p  \sum_i x_{1p} 
+$$
+
+- if your predictors are demeaned $\hat{\beta}_0 = \bar{y}$
+- if both predictors and $y$ are demeaned, intercept should be $0$
+
+
+Read the documentation, because every function is different!
+
+
+## More realistic
+
+Another thing that this book fails to mention is that scaling predictors is often important.
+
+The reason this is done is so that the **penalty is applied evenly to all predictors**.
+
+$$
+\tilde{x}_{i,j} = \frac{x_{i,j} - \bar{x}_j}{s_j}
+$$
+
+where $\bar{x}_j = n^{-1} \sum_{i=1}^n x_{i,j}$ and $s_j^2 = (n-1)^1 \sum_{i=1}^n (x_{i,j} - \bar{x}_j)^2$. 
+
+
+## Selecting $k$
+
+Increasing $k$ 
+
+- increases bias :(
+- reduces variance :)
+
+
+How do we pick the "best" $k$?
+
+The book recommends me use the **ridge trace**, which is a plot of the ridge coefficient estimates versus $k$.
+
+
+## Selecting $k$
+
+```{r, out.width="400px"}
+library(glmnet)
+head(longley)
+X <- model.matrix( ~ . - GNP.deflator, data = longley)
+possible_k <- seq(0, 10, .05)
+mod <- glmnet(x = X,
+              y = as.matrix(longley[,1]),
+              family = "gaussian",
+              alpha = "0", # don't change this
+              lambda = possible_k,
+              standardize = T, # default is T 
+              intercept = T)
+plot(mod, xvar = "lambda", label=T)
+```
+
+
+## selecting $k$
+
+`glmnet` also provides a method that can select $k$ using cross-validation: `cv.glmnet()`
+
+```{r}
+mod2 <- cv.glmnet(x = X,
+                  y = as.matrix(longley[,1]),
+                  family = "gaussian",
+                  alpha = "0", # don't change this
+                  standardize = T, # default is T 
+                  intercept = T,
+                  nfolds = 3)
+plot(mod2)
+```
+
+- `mod2$lambda.min` the first vertical line, minimizes out of sample MSE
+- `mod2$lambda.1se` second vertical line, adds one std. error to be conservative
+- numbers on the top are the number of nonzero coefficients

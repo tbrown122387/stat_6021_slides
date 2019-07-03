@@ -18,24 +18,26 @@ output: slidy_presentation
 
 ## A brief tour 
 
-- Homeworks: 
-    * 40%
-    * find them in the Assignments tab 
 - Participation:
-    * 20%
-    * mostly reading comprehensions
+    * 10% (mostly reading comprehensions)
     * find them in the Tests & Quizzes tab
-- Final Project 
+- Homeworks: 
     * 25%
-- Midterm
-    * 15% 
+    * find them in the Assignments tab 
+- Project 1/2
+    * 30%, 35% respectively
 <br/>
 <br/>
 <br/>
+
+## Communicating
+
 
 My email: [`trb5me@virginia.edu`](mailto:trb5me@virginia.edu)
 
-Information: syllabus, Collab
+slack: [`https://stat6021.slack.com/`](https://stat6021.slack.com/)
+
+Other Information: Collab (e.g. syllabus)
 
 ## Getting started
 
@@ -47,6 +49,14 @@ See the first box at the top. Choose among Windows, Mac and Linux options.
 
 Download RStudio Desktop from here:
 	https://www.rstudio.com/products/rstudio/download/
+
+## Getting started
+
+Assignments are graded with ["gradeR"](https://cran.r-project.org/web/packages/gradeR/gradeR.pdf). 
+
+- assign your answers to the right variables
+- use local paths (interactively use `setwd()`)
+- don't delete/overwrite variables later in the script
 
 ## Questions?
 

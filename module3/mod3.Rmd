@@ -288,7 +288,6 @@ plot(my_df$x, my_df$y)
 ```{r mlr1, echo=T}
 my_df$xsquared <- x^2
 mlr_model <- lm(y ~ x + xsquared, data=my_df)
-# mlr_model <- lm(y ~ . + xsquared, data=my_df) # . means "all other columns"
 summary(mlr_model)
 ```
 

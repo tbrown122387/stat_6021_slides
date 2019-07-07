@@ -108,7 +108,7 @@ We can also show that
 $$
 \frac{\hat{\beta}_1 - \beta_1}{\sqrt{ MS_{Res}/S_{xx}}  } \sim t_{df_{Res}}
 $$
-(we still don't know $\beta_1$..)
+(we still don't know $\beta_1$...)
 
 
 ## The t-test
@@ -122,7 +122,7 @@ $$
 
 ## The t-test
 
-General idea: if we calculate $t_0$ but it doesn't look like it's coming from 
+General idea: if we calculate $t_0$ but it doesn't look like it's coming from the null distn.,
 
 ```{r tplot1, echo=TRUE, out.width = "500px"}
 x <- seq(-3,3,.01)
@@ -138,8 +138,8 @@ then we reject our assumption about $\beta_1$ (we keep assuming all the other th
 ## The t-test in `R`
 
 ```{r demo1, echo=TRUE}
-setwd("/home/t/UVa/all_teaching/summer19_6021")
-my_data <- read.csv("data/data-table-B3.csv")
+setwd("/home/t/UVa/all_teaching/summer19_6021/data")
+my_data <- read.csv("data-table-B3.csv")
 reg_mod_1 <- lm(y ~ x1, data = my_data)
 summary(reg_mod_1)  
 ```
@@ -245,7 +245,7 @@ $$
 P\left(\chi^2_{1-\alpha/2, df_{Res}} \le SS_{Res}/\sigma^2 \le \chi^2_{\alpha/2,df_{Res}} \right)
 $$
 
-if you rearrange this to look like  $\text{\left} \le \sigma^2 \le \text{\right}$ then your interval becomes
+if you rearrange this to look like  $\text{left stuff} \le \sigma^2 \le \text{right stuff}$, then your interval becomes
 
 $$
 \left[\frac{SS_{Res} }{\chi^2_{\alpha/2,df_{Res}} }, \frac{SS_{Res} }{\chi^2_{1-\alpha/2, df_{Res}} } \right]

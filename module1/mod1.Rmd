@@ -457,8 +457,8 @@ The red line is the quantile $F_{\alpha,1, 20}$.
 ## `R` examples!
 
 ```{r demo1, echo=TRUE}
-setwd("/home/t/UVa/all_teaching/summer19_6021")
-my_data <- read.csv("data/data-table-B3.csv")
+setwd("/home/t/UVa/all_teaching/summer19_6021/data")
+my_data <- read.csv("data-table-B3.csv")
 head(my_data) # always check that it worked
 ```
 

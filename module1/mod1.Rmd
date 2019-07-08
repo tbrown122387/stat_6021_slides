@@ -309,13 +309,13 @@ $$
 \hat{\beta}_1 = \sum_i c_i y_i
 $$
 
-Where 
+where 
 $$
-c_i = \frac{(x_i - \bar{x}) }{S_{xx}} = \frac{(x_i - \bar{x}) }{\sum_{j=1}^n (x_j - \bar{x})^2 }.
+c_i = \frac{(x_i - \bar{x}) }{\sum_{j=1}^n (x_j - \bar{x})^2 } = \frac{(x_i - \bar{x}) }{S_{xx}} .
 $$
 
 
-where $\sum(x_i - \bar{x})^2 = S_{xx}$
+The following equation is true by definition: $\sum(x_i - \bar{x})^2 = S_{xx}$.
 
 ## A Trick
 
@@ -346,7 +346,7 @@ E[\hat{\beta}_1 ] &= E[ \sum_i c_i y_i ] \\
 &= \sum_i c_i [\beta_0 + \beta_1 x_i ] \\
 &= \beta_0 \sum_i c_i  + \beta_1 \sum_i c_i x_i  \\
 &= \beta_0 \sum_i \frac{(x_i - \bar{x}) }{S_{xx}}  + \beta_1 \sum_i \frac{(x_i - \bar{x}) }{S_{xx}} x_i  \\
-&= \beta_1 \sum_i c_i \frac{(x_i - \bar{x}) }{S_{xx}}  \\
+&= \beta_1 \sum_i x_i \frac{(x_i - \bar{x}) }{S_{xx}}  \\
 &= \beta_1 \sum_i \frac{(x_i - \bar{x})^2 }{S_{xx}} \\
 &= \beta_1
 \end{align*}

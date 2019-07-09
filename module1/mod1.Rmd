@@ -401,9 +401,13 @@ ggplot(d, aes(x = x, y = y)) +
 ## Estimating the third parameter
 
 $$
-\hat{\sigma}^2 = \frac{\sum_{i=1}^n (y_i - \hat{y}_i )^2 }{n-2} = \frac{SS_{\text{res}} }{n-2}
+\hat{\sigma}^2 = \frac{\sum_{i=1}^n (y_i - \hat{y}_i )^2 }{n-2} = \frac{SS_{\text{res}} }{n-2}.
 $$
-Note we use $n-2$ instead of $n$
+Note we use $n-2$ instead of $n$.
+
+In the next chapter, we call $\hat{\sigma}^2 = \text{MS}_{Res}$.
+
+
 
 
 ## Sums of Squares

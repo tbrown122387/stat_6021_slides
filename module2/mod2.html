@@ -668,7 +668,7 @@ E[y \mid x_0] = \beta_0 + \beta_1 x_0
 <p><span class="math display">\[
 \hat{E}[y \mid x_0] = \hat{\beta}_0 + \hat{\beta}_1 x_0
 \]</span></p>
-<p>Clearly it’s unbiased, and normally distributed!</p>
+<p>We will now derive a trick that will let us show it’s normally distributed, and find its mean and variance!</p>
 </div>
 <div id="intervals-for-the-mean-response-1" class="slide section level2">
 <h1>Intervals for the mean response</h1>
@@ -695,7 +695,7 @@ V\left( \hat{E}[y \mid x_0] \right)
 &amp;= \sum_i V\left[ y_i \left(\frac{1}{n} + c_i (x_0 -  \bar{x}) \right)\right] \tag{indep.} \\
 &amp;= \sum_i  \left(\frac{1}{n} + c_i (x_0 -  \bar{x}) \right)^2 V(y_i) \\
 &amp;= \sigma^2 \sum_i  \left(\frac{1}{n} + c_i (x_0 -  \bar{x}) \right)^2  \\
-&amp;= \sigma^2 \sum_i\left( \frac{1}{n^2} + 2 \frac{c_i}{n} (x_0 -  \bar{x})  + c_i^2 (x_0 -  \bar{x})^2 \right)^2 \\
+&amp;= \sigma^2 \sum_i\left( \frac{1}{n^2} + 2 \frac{c_i}{n} (x_0 -  \bar{x})  + c_i^2 (x_0 -  \bar{x})^2 \right) \\
 &amp;= \sigma^2 \left( \frac{1}{n} + \frac{(x_0 -  \bar{x})^2}{S_{xx}} \right) 
 \end{align*}\]</span></p>
 <p>because <span class="math inline">\(\sum_i c_i = 0\)</span></p>

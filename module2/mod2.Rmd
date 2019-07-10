@@ -284,7 +284,7 @@ $$
 \hat{E}[y \mid x_0] = \hat{\beta}_0 + \hat{\beta}_1 x_0
 $$
 
-Clearly it's unbiased, and normally distributed!
+We will now derive a trick that will let us show it's normally distributed, and find its mean and variance!
 
 ## Intervals for the mean response
 
@@ -318,7 +318,7 @@ V\left( \hat{E}[y \mid x_0] \right)
 &= \sum_i V\left[ y_i \left(\frac{1}{n} + c_i (x_0 -  \bar{x}) \right)\right] \tag{indep.} \\
 &= \sum_i  \left(\frac{1}{n} + c_i (x_0 -  \bar{x}) \right)^2 V(y_i) \\
 &= \sigma^2 \sum_i  \left(\frac{1}{n} + c_i (x_0 -  \bar{x}) \right)^2  \\
-&= \sigma^2 \sum_i\left( \frac{1}{n^2} + 2 \frac{c_i}{n} (x_0 -  \bar{x})  + c_i^2 (x_0 -  \bar{x})^2 \right)^2 \\
+&= \sigma^2 \sum_i\left( \frac{1}{n^2} + 2 \frac{c_i}{n} (x_0 -  \bar{x})  + c_i^2 (x_0 -  \bar{x})^2 \right) \\
 &= \sigma^2 \left( \frac{1}{n} + \frac{(x_0 -  \bar{x})^2}{S_{xx}} \right) 
 \end{align*}
 

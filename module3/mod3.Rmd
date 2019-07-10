@@ -212,13 +212,13 @@ S(\boldsymbol{\beta}) &= (\mathbf{y} - \mathbf{X} \boldsymbol{\beta})^{\intercal
 &= (\mathbf{y}^{\intercal} - [\mathbf{X} \boldsymbol{\beta}]^{\intercal})(\mathbf{y} - \mathbf{X} \boldsymbol{\beta}) \\
 &=(\mathbf{y}^{\intercal} - \boldsymbol{\beta}^{\intercal} \mathbf{X}^{\intercal} )(\mathbf{y} - \mathbf{X} \boldsymbol{\beta}) \\
 &= \mathbf{y}^{\intercal}\mathbf{y} - \mathbf{y}^{\intercal}\mathbf{X} \boldsymbol{\beta} \\
-&\hspace{10mm} - \boldsymbol{\beta}^{\intercal} \mathbf{X}^{\intercal} \mathbf{y} + \boldsymbol{\beta} \mathbf{X}^{\intercal}\mathbf{X} \boldsymbol{\beta} \\
-&= \mathbf{y}^{\intercal}\mathbf{y} - 2\mathbf{y}^{\intercal}\mathbf{X} \boldsymbol{\beta}  + \boldsymbol{\beta} \mathbf{X}^{\intercal}\mathbf{X} \boldsymbol{\beta}
+&\hspace{10mm} - \boldsymbol{\beta}^{\intercal} \mathbf{X}^{\intercal} \mathbf{y} + \boldsymbol{\beta}^{\intercal} \mathbf{X}^{\intercal}\mathbf{X} \boldsymbol{\beta} \\
+&= \mathbf{y}^{\intercal}\mathbf{y} - 2\mathbf{y}^{\intercal}\mathbf{X} \boldsymbol{\beta}  + \boldsymbol{\beta}^{\intercal} \mathbf{X}^{\intercal}\mathbf{X} \boldsymbol{\beta}
 \end{align*}
 
 ## Matrices to the rescue
 
-taking the derivatives of the loss $S(\boldsymbol{\beta}) = \mathbf{y}^{\intercal}\mathbf{y} - 2\mathbf{y}^{\intercal}\mathbf{X} \boldsymbol{\beta}  + \boldsymbol{\beta} \mathbf{X}^{\intercal}\mathbf{X} \boldsymbol{\beta}$
+taking the derivatives of the loss $S(\boldsymbol{\beta}) = \mathbf{y}^{\intercal}\mathbf{y} - 2\mathbf{y}^{\intercal}\mathbf{X} \boldsymbol{\beta}  + \boldsymbol{\beta}^{\intercal} \mathbf{X}^{\intercal}\mathbf{X} \boldsymbol{\beta}$
 
 $$
 \frac{\partial S}{\partial\boldsymbol{\beta} } = -2\mathbf{X}^{\intercal} \mathbf{y} + 2\mathbf{X}^{\intercal}\mathbf{X}\boldsymbol{\beta} \overset{\text{set}}{=} 0
@@ -323,7 +323,7 @@ If $\mathbf{X} = \begin{bmatrix} \mathbf{1} & \mathbf{x}_1 & \cdots & \mathbf{x}
 \begin{bmatrix}
 n & \sum_i x_{i1} & \sum_i x_{i2} & \cdots & \sum_i x_{ik} \\
 \sum_i x_{i1} & \sum_i x_{i1}^2 & \sum_i x_{i1}x_{i2} & \cdots & \sum_i x_{i1}x_{ik} \\
-\vdots & \vdots & \vdots & & \vdots\\
+\vdots & \vdots & \vdots & \ddots & \vdots\\
 \sum_i x_{ik} & \sum_i x_{i1}x_{i,k} & \sum_i x_{i2}x_{ik} & \cdots & \sum_i x_{i,k}^2
 \end{bmatrix}
 \end{align*}
@@ -380,7 +380,7 @@ $$
 V\left[\mathbf{A} \mathbf{W} \right] = \mathbf{A} V\left[ \mathbf{W} \right]\mathbf{A}^{\intercal}
 $$
 
-This is analogous to the unvariate case: $V[cX] = c^2V[X]$
+This is analogous to the univariate case: $V[cX] = c^2V[X]$
 
 ## Finding the distribution of $\hat{\boldsymbol{\beta}}$
 

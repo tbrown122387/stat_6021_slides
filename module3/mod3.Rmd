@@ -324,7 +324,7 @@ If $\mathbf{X} = \begin{bmatrix} \mathbf{1} & \mathbf{x}_1 & \cdots & \mathbf{x}
 n & \sum_i x_{i1} & \sum_i x_{i2} & \cdots & \sum_i x_{ik} \\
 \sum_i x_{i1} & \sum_i x_{i1}^2 & \sum_i x_{i1}x_{i2} & \cdots & \sum_i x_{i1}x_{ik} \\
 \vdots & \vdots & \vdots & \ddots & \vdots\\
-\sum_i x_{ik} & \sum_i x_{i1}x_{i,k} & \sum_i x_{i2}x_{ik} & \cdots & \sum_i x_{i,k}^2
+\sum_i x_{ik} & \sum_i x_{i1}x_{ik} & \sum_i x_{i2}x_{ik} & \cdots & \sum_i x_{ik}^2
 \end{bmatrix}
 \end{align*}
 

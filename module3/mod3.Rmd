@@ -531,12 +531,12 @@ summary(mlr_model)
 ## Individual Coefficients
 
 $$
-t_0 = \frac{\hat{\beta}_j - \beta_j }{ \hat{\sigma}^2 [(\mathbf{X}^{\intercal}\mathbf{X})^{-1}]_{jj} } \sim t_{df_{Res}}
+t_0 = \frac{\hat{\beta}_j - \beta_j }{\sqrt{ \hat{\sigma}^2 [(\mathbf{X}^{\intercal}\mathbf{X})^{-1}]_{jj}} } \sim t_{df_{Res}}
 $$
 
 - Test Statistic for $H_0: \beta_j = 0$:
 $$
-t_0 = \frac{\hat{\beta}_j }{ \hat{\sigma}^2 [(\mathbf{X}^{\intercal}\mathbf{X})^{-1}]_{jj} }
+t_0 = \frac{\hat{\beta}_j }{ \sqrt{\hat{\sigma}^2 [(\mathbf{X}^{\intercal}\mathbf{X})^{-1}]_{jj}} }
 $$
 - $1-\alpha$ CI
 $$
@@ -551,7 +551,6 @@ $$
 ```{r t-test, echo=T}
 summary(mlr_model)
 ```
-
 
 
 ## Sum of Squares decomposition
@@ -675,7 +674,7 @@ $$
 
 where $\mathbf{H}_1 = \mathbf{X}_1 (\mathbf{X}_1^{\intercal}\mathbf{X}_1)^{-1}\mathbf{X}_1^{\intercal}$
 
-- $SS_{R}(\boldsymbol{\beta}_1) - SS_{R}(\boldsymbol{\beta}_1)$ is the added *extra sum of squares*
+- $SS_{R}(\boldsymbol{\beta}) - SS_{R}(\boldsymbol{\beta}_1)$ is the added *extra sum of squares*
 
 
 

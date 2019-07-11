@@ -404,17 +404,17 @@ $$
 We still estimate the error variance with the average squared residual:
 
 $$
-\hat{\sigma}^2 = \frac{\sum_{i=1}^n (y_i- \hat{y}_i)^2 }{n-k-1}
+\hat{\sigma}^2 = MS_{Res} = \frac{\sum_{i=1}^n (y_i- \hat{y}_i)^2 }{n-k-1}
 $$
 
-Note we use $n-k -1$ instead of $n$.
+Note we use $n-k -1$ instead of $n$. With simple linear regression $k=1$.
 
 ## estimating $\sigma^2$
 
 It's cleaner to write the sum of squares in terms of an inner product:
 
 $$
-\hat{\sigma}^2 = (\mathbf{y} - \mathbf{X} \hat{\boldsymbol{\beta}})^{\intercal}(\mathbf{y} - \mathbf{X} \hat{\boldsymbol{\beta}})/(n-k-1)
+\hat{\sigma}^2 = MS_{Res} = \frac{(\mathbf{y} - \mathbf{X} \hat{\boldsymbol{\beta}})^{\intercal}(\mathbf{y} - \mathbf{X} \hat{\boldsymbol{\beta}})}{(n-k-1)}
 $$
 
 The numerator is the loss function evaluated at $\hat{\boldsymbol{\beta}}$.

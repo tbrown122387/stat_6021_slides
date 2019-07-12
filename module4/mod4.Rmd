@@ -228,6 +228,33 @@ head(my_data)
 avPlots(lm(y ~ ., data = my_data))
 ```
 
+## Added-Variable Plots
+
+Some intuition: 
+
+Say we are interested in looking at $x_1$. Pretend now that it *doesn't* belong in the model.
+
+- true model: $y = \beta_0 + \beta_2 x_2 + \epsilon$
+- predictors are correlated: $x_1 = \alpha_0 + \alpha_1 x_2 + \tilde{\epsilon}$
+
+The residuals from regressing $y$ on everything except for $x_1$ will roughly be $\epsilon$. These are uncorrelated with everything, and in particular, with the residuals of $x_1$ regressed on the others.
+
+
+## Added-Variable Plots
+
+Some intuition: 
+
+Say we are interested in looking at $x_1$. Pretend that it *does* belong in the model.
+
+- true model: $y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \epsilon$
+- predictors are correlated: $x_1 = \alpha_0 + \alpha_1 x_2 + \tilde{\epsilon}$
+
+Regressing $y$ on everything except for $x_1$ roughly gives you
+$$
+y = \underbrace{\beta_0 + \beta_1 \alpha_0}_{\text{intercept}} +  \underbrace{(\beta_2 + \beta_1 \alpha_1)}_{\text{slope}}x_2 + \underbrace{\epsilon + \beta_1 \tilde{\epsilon}}_{\text{residuals}} 
+$$
+So the residuals from regressing $y$ on everything else ($\epsilon + \beta_1 \tilde{\epsilon}$) are a function of the residuals from regressing $x_1$ on everything else ($\tilde{\epsilon}$). 
+
 
 ## Variance-Stabilizing Transformations
 

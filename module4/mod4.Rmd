@@ -87,10 +87,10 @@ $$
 The *externally studentized residuals* follow a t-distribution *exactly* (if $\boldsymbol{\epsilon}$ is normal). These are what we will use to check diagnostics.
 
 $$
-t_i = \frac{e_i}{\sqrt{ MS_{(i),Res} (1 - h_{ii}) }} \sim t_{df_{Res}}
+t_i = \frac{e_i}{\sqrt{ MS_{(i),Res} (1 - h_{ii}) }} \sim t_{df_{Res}-1}
 $$
 
-$MS_{(i),Res}$ differs from $MS_{Res}$ because it is based on all of the data except for the $i$th data point. 
+$MS_{(i),Res}$ differs from $MS_{Res}$ because it is based on all of the data except for the $i$th data point. This is also why we lose an extra degree of freedom!
 
 <!-- That is -->
 <!-- $$ -->
@@ -154,7 +154,7 @@ Plots:
 
 ## Checking normality
 
-If $\boldsymbol{\epsilon}$ is normal, then $\{t_i\}$ are iid $t_{df_{Res}}$
+If $\boldsymbol{\epsilon}$ is normal, then $\{t_i\}$ are iid $t_{df_{Res}-1}$
 
 ```{r residuals3, echo=T, out.width="600px"}
 x_grid <- seq(min(extern_s_resids)-.5, max(extern_s_resids)+.5, by = .01)
@@ -213,11 +213,11 @@ plot(my_df$x, studres(bad_mod))
 
 A *partial regression plot* aka an *added-variable plot* plots two types of residuals against each other
 
-- $y$ against all predictors except $x_i$
+- $\mathbf{y}$ against all predictors except $\mathbf{x}_i$
 
-- $x_i$ against all other predictors
+- $\mathbf{x}_i$ against all other predictors
 
-The plot is straight-sloped if it should be included in the model. It's horizontal if it's redundant. And it's curved if you might need to add a power of $x_i$ to the regression model.
+The plot is straight-sloped if it should be included in the model. It's horizontal if it's redundant. And it's curved if you might need to add a power of $\mathbf{x}_i$ to the regression model.
 
 ## Added-Variable Plots
 

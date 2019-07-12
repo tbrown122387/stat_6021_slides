@@ -706,7 +706,7 @@ $$
 *Adjusted $R^2$* has a built-in penalty
 
 $$
-R^2 = 1 - \frac{SS_{Res}/(n-k-1)}{MS_T/(n-1)}
+R^2_{\text{adj}} = 1 - \frac{SS_{Res}/(n-k-1)}{SS_T/(n-1)}
 $$
 
 `summary()` spits this out

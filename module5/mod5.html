@@ -486,7 +486,7 @@ V[e_i] = \sigma^2(1- \mathbf{H}_{ii})
 <div id="exploring-mathbfh-2" class="slide section level2">
 <h1>Exploring <span class="math inline">\(\mathbf{H}\)</span></h1>
 <p>Q: what does <span class="math inline">\(\mathbf{H}_{ii}\)</span> mean, though?</p>
-<p>A: it’s related to how far away the <span class="math inline">\(i\)</span>th row/observation is from the typical observation?</p>
+<p>A: it’s related to how far away the <span class="math inline">\(i\)</span>th row/observation is from the typical observation</p>
 <p>I.e. how far is <span class="math inline">\(\mathbf{x}_i^{\intercal} = (1, x_{i1}, x_{i2}, \ldots, x_{ik})\)</span> from <span class="math inline">\(\bar{\mathbf{x}}^{\intercal}\)</span></p>
 <p>(Squared) Euclidean distance?</p>
 <p><span class="math display">\[
@@ -553,7 +553,7 @@ s_{k1} &amp; \cdots  &amp; s_k^2
 <p><span class="math display">\[
 \begin{bmatrix} 1/n+\bar{\mathbf{x}}_{-1}^{\intercal}( \mathbf{C}- n\bar{\mathbf{x}}_{-1}\bar{\mathbf{x}}_{-1}^{\intercal})^{-1}\bar{\mathbf{x}}_{-1}  &amp; -\bar{\mathbf{x}}_{-1}^{\intercal}( \mathbf{C}- n\bar{\mathbf{x}}_{-1}\bar{\mathbf{x}}_{-1}^{\intercal})^{-1} \\ - ( \mathbf{C}- n\bar{\mathbf{x}}_{-1}\bar{\mathbf{x}}_{-1}^{\intercal})^{-1}\bar{\mathbf{x}}_{-1} &amp; ( \mathbf{C}- n\bar{\mathbf{x}}_{-1}\bar{\mathbf{x}}_{-1}^{\intercal})^{-1} \end{bmatrix}
 \]</span> which equals <span class="math display">\[
-\begin{bmatrix} 1/n+\bar{\mathbf{x}}_{-1}^{\intercal}( [n-1] \mathbf{S}^2)^{-1}\bar{\mathbf{x}}_{-1}  &amp; -\bar{\mathbf{x}}_{-1}^{\intercal}( [n-1] \mathbf{S}^2)^{-1} \\ - ([n-1] \mathbf{S}^2)^{-1}\bar{\mathbf{x}}_{-1} &amp; ( [n-1] \mathbf{S}^2)^{-1} \end{bmatrix}
+\begin{bmatrix} 1/n+\bar{\mathbf{x}}_{-1}^{\intercal}( [n-1] \mathbf{S})^{-1}\bar{\mathbf{x}}_{-1}  &amp; -\bar{\mathbf{x}}_{-1}^{\intercal}( [n-1] \mathbf{S})^{-1} \\ - ([n-1] \mathbf{S})^{-1}\bar{\mathbf{x}}_{-1} &amp; ( [n-1] \mathbf{S})^{-1} \end{bmatrix}
 \]</span></p>
 </div>
 <div id="exploring-mathbfh-7" class="slide section level2">
@@ -565,22 +565,22 @@ s_{k1} &amp; \cdots  &amp; s_k^2
 \begin{bmatrix}
 1 &amp; \mathbf{x}_{i,-1}^\intercal
 \end{bmatrix}
-\begin{bmatrix} 1/n+\bar{\mathbf{x}}_{-1}^{\intercal}( [n-1] \mathbf{S}^2)^{-1}\bar{\mathbf{x}}_{-1}  &amp; -\bar{\mathbf{x}}_{-1}^{\intercal}( [n-1] \mathbf{S}^2)^{-1} \\ - ([n-1] \mathbf{S}^2)^{-1}\bar{\mathbf{x}}_{-1} &amp; ( [n-1] \mathbf{S}^2)^{-1} \end{bmatrix}
+\begin{bmatrix} 1/n+\bar{\mathbf{x}}_{-1}^{\intercal}( [n-1] \mathbf{S})^{-1}\bar{\mathbf{x}}_{-1}  &amp; -\bar{\mathbf{x}}_{-1}^{\intercal}( [n-1] \mathbf{S})^{-1} \\ - ([n-1] \mathbf{S})^{-1}\bar{\mathbf{x}}_{-1} &amp; ( [n-1] \mathbf{S})^{-1} \end{bmatrix}
 \begin{bmatrix}
 1 \\
 \mathbf{x}_{j,-1}
 \end{bmatrix}\\
 &amp;= \begin{bmatrix}
-\frac{1}{n} - (\mathbf{x}_{i,-1} - \bar{\mathbf{x}}_{-1})^{\intercal}( [n-1] \mathbf{S}^2)^{-1}\bar{\mathbf{x}}_{-1}  &amp; 
-(\mathbf{x}_{i,-1} - \bar{\mathbf{x}}_{-1})^{\intercal}( [n-1] \mathbf{S}^2)^{-1}
+\frac{1}{n} - (\mathbf{x}_{i,-1} - \bar{\mathbf{x}}_{-1})^{\intercal}( [n-1] \mathbf{S})^{-1}\bar{\mathbf{x}}_{-1}  &amp; 
+(\mathbf{x}_{i,-1} - \bar{\mathbf{x}}_{-1})^{\intercal}( [n-1] \mathbf{S})^{-1}
 \end{bmatrix}
 \begin{bmatrix}
 1 \\
 \mathbf{x}_{j,-1}
 \end{bmatrix}\\
-&amp;= \frac{1}{n}   + (\mathbf{x}_{i,-1} - \bar{\mathbf{x}}_{-1})^{\intercal}( \mathbf{S}^2)^{-1}(\mathbf{x}_{j,-1} - \bar{\mathbf{x}}_{-1})/(n-1)
+&amp;= \frac{1}{n}   + (\mathbf{x}_{i,-1} - \bar{\mathbf{x}}_{-1})^{\intercal} \mathbf{S}^{-1}(\mathbf{x}_{j,-1} - \bar{\mathbf{x}}_{-1})/(n-1)
 \end{align*}\]</span></p>
-<p>In particular <span class="math inline">\(\mathbf{H}_{i,i} = \frac{1}{n} + \underbrace{(\mathbf{x}_{i,-1} - \bar{\mathbf{x}}_{-1})^{\intercal}( \mathbf{S}^2)^{-1}(\mathbf{x}_{i,-1} - \bar{\mathbf{x}}_{-1})}_{\text{Mahalanobis dist.} }/(n-1)\)</span></p>
+<p>In particular <span class="math inline">\(\mathbf{H}_{i,i} = \frac{1}{n} + \underbrace{(\mathbf{x}_{i,-1} - \bar{\mathbf{x}}_{-1})^{\intercal}\mathbf{S}^{-1}(\mathbf{x}_{i,-1} - \bar{\mathbf{x}}_{-1})}_{\text{Mahalanobis dist.} }/(n-1)\)</span></p>
 <!-- ## On the variance of ${\boldsymbol{\beta}}$ -->
 <!-- By the way, from a few slides back -->
 <!-- $$ -->
@@ -622,7 +622,7 @@ x_1 - 10 \times x_2 = 0
 ## 
 ## Coefficients:
 ## (Intercept)           x1           x2  
-##    -1.35346      0.02464           NA</code></pre>
+##     0.72423      0.05491           NA</code></pre>
 <p>See the <code>NA</code>. It doesn’t make a number up.</p>
 </div>
 <div id="multicollinearity-3" class="slide section level2">
@@ -641,7 +641,7 @@ V[\hat{\boldsymbol{\beta}}] = \sigma^2(\mathbf{X}^\intercal\mathbf{X})^{-1}
 \mathbf{X}^\intercal \mathbf{X} = 
 \begin{bmatrix}
 \mathbf{x}_3^\intercal \\
-\mathbf{x}_{-3} 
+\mathbf{x}_{-3}^\intercal 
 \end{bmatrix}
 \begin{bmatrix}
 \mathbf{x}_3 &amp; \mathbf{x}_{-3} 

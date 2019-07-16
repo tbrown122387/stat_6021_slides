@@ -93,7 +93,7 @@ Rule of thumb: flag row $j$ when $\mathbf{H}_{jj} > 3 \frac{k+1}{n}$. More on th
 
 Q: what does $\mathbf{H}_{ii}$ mean, though?
 
-A: it's related to how far away the $i$th row/observation is from the typical observation?
+A: it's related to how far away the $i$th row/observation is from the typical observation
 
 I.e. how far is $\mathbf{x}_i^{\intercal} = (1, x_{i1}, x_{i2}, \ldots, x_{ik})$ from $\bar{\mathbf{x}}^{\intercal}$
 
@@ -188,7 +188,7 @@ $$
 $$
 which equals 
 $$
-\begin{bmatrix} 1/n+\bar{\mathbf{x}}_{-1}^{\intercal}( [n-1] \mathbf{S}^2)^{-1}\bar{\mathbf{x}}_{-1}  & -\bar{\mathbf{x}}_{-1}^{\intercal}( [n-1] \mathbf{S}^2)^{-1} \\ - ([n-1] \mathbf{S}^2)^{-1}\bar{\mathbf{x}}_{-1} & ( [n-1] \mathbf{S}^2)^{-1} \end{bmatrix}
+\begin{bmatrix} 1/n+\bar{\mathbf{x}}_{-1}^{\intercal}( [n-1] \mathbf{S})^{-1}\bar{\mathbf{x}}_{-1}  & -\bar{\mathbf{x}}_{-1}^{\intercal}( [n-1] \mathbf{S})^{-1} \\ - ([n-1] \mathbf{S})^{-1}\bar{\mathbf{x}}_{-1} & ( [n-1] \mathbf{S})^{-1} \end{bmatrix}
 $$
 
 
@@ -203,23 +203,23 @@ So
 \begin{bmatrix}
 1 & \mathbf{x}_{i,-1}^\intercal
 \end{bmatrix}
-\begin{bmatrix} 1/n+\bar{\mathbf{x}}_{-1}^{\intercal}( [n-1] \mathbf{S}^2)^{-1}\bar{\mathbf{x}}_{-1}  & -\bar{\mathbf{x}}_{-1}^{\intercal}( [n-1] \mathbf{S}^2)^{-1} \\ - ([n-1] \mathbf{S}^2)^{-1}\bar{\mathbf{x}}_{-1} & ( [n-1] \mathbf{S}^2)^{-1} \end{bmatrix}
+\begin{bmatrix} 1/n+\bar{\mathbf{x}}_{-1}^{\intercal}( [n-1] \mathbf{S})^{-1}\bar{\mathbf{x}}_{-1}  & -\bar{\mathbf{x}}_{-1}^{\intercal}( [n-1] \mathbf{S})^{-1} \\ - ([n-1] \mathbf{S})^{-1}\bar{\mathbf{x}}_{-1} & ( [n-1] \mathbf{S})^{-1} \end{bmatrix}
 \begin{bmatrix}
 1 \\
 \mathbf{x}_{j,-1}
 \end{bmatrix}\\
 &= \begin{bmatrix}
-\frac{1}{n} - (\mathbf{x}_{i,-1} - \bar{\mathbf{x}}_{-1})^{\intercal}( [n-1] \mathbf{S}^2)^{-1}\bar{\mathbf{x}}_{-1}  & 
-(\mathbf{x}_{i,-1} - \bar{\mathbf{x}}_{-1})^{\intercal}( [n-1] \mathbf{S}^2)^{-1}
+\frac{1}{n} - (\mathbf{x}_{i,-1} - \bar{\mathbf{x}}_{-1})^{\intercal}( [n-1] \mathbf{S})^{-1}\bar{\mathbf{x}}_{-1}  & 
+(\mathbf{x}_{i,-1} - \bar{\mathbf{x}}_{-1})^{\intercal}( [n-1] \mathbf{S})^{-1}
 \end{bmatrix}
 \begin{bmatrix}
 1 \\
 \mathbf{x}_{j,-1}
 \end{bmatrix}\\
-&= \frac{1}{n}   + (\mathbf{x}_{i,-1} - \bar{\mathbf{x}}_{-1})^{\intercal}( \mathbf{S}^2)^{-1}(\mathbf{x}_{j,-1} - \bar{\mathbf{x}}_{-1})/(n-1)
+&= \frac{1}{n}   + (\mathbf{x}_{i,-1} - \bar{\mathbf{x}}_{-1})^{\intercal} \mathbf{S}^{-1}(\mathbf{x}_{j,-1} - \bar{\mathbf{x}}_{-1})/(n-1)
 \end{align*}
 
-In particular $\mathbf{H}_{i,i} = \frac{1}{n}   + \underbrace{(\mathbf{x}_{i,-1} - \bar{\mathbf{x}}_{-1})^{\intercal}( \mathbf{S}^2)^{-1}(\mathbf{x}_{i,-1} - \bar{\mathbf{x}}_{-1})}_{\text{Mahalanobis dist.} }/(n-1)$
+In particular $\mathbf{H}_{i,i} = \frac{1}{n}   + \underbrace{(\mathbf{x}_{i,-1} - \bar{\mathbf{x}}_{-1})^{\intercal}\mathbf{S}^{-1}(\mathbf{x}_{i,-1} - \bar{\mathbf{x}}_{-1})}_{\text{Mahalanobis dist.} }/(n-1)$
 
 <!-- ## On the variance of ${\boldsymbol{\beta}}$ -->
 
@@ -293,7 +293,7 @@ $$
 \mathbf{X}^\intercal \mathbf{X} = 
 \begin{bmatrix}
 \mathbf{x}_3^\intercal \\
-\mathbf{x}_{-3} 
+\mathbf{x}_{-3}^\intercal 
 \end{bmatrix}
 \begin{bmatrix}
 \mathbf{x}_3 & \mathbf{x}_{-3} 

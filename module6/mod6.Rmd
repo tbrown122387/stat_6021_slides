@@ -202,7 +202,7 @@ big_mod <- lm(y ~ x1 + Species + x1:Species , data = Xdf)
 anova(lil_mod, big_mod)
 ```
 
-If we didn't reject that null, we could go on and test $H_0: \beta_4 = \beta_5 = 0$ (just intercept shifts) or $H_0: \beta_2 = \beta_3 0$ (just slope shifts)
+If we didn't reject that null, we could go on and test $H_0: \beta_4 = \beta_5 = 0$ (just intercept shifts) or $H_0: \beta_2 = \beta_3 = 0$ (just slope shifts)
 
 
 ##  Connections with Analysis of Variance
@@ -259,7 +259,7 @@ y_{ij} = \mu + \tau_{i} + \epsilon_{ij}.
 $$
 Then this is the same as
 $$
-y_{ij} = \beta_0 + \beta_1 1(i = 2)+ \beta_2 1(i = 3) + \epsilon_{ij}
+y_{ij} = \beta_0 + \beta_1 \mathbf{1}(i = 2)+ \beta_2 \mathbf{1}(i = 3) + \epsilon_{ij}
 $$
 
 So

@@ -81,8 +81,8 @@ We can rewrite this as
 $$
 y = 
 \begin{cases}
-\beta_0 + \beta_1 x_1 + \epsilon & x_1 = 0 \\
-\beta_1 + \beta_1 x_1 + \beta_2 + \epsilon & x_2 = 1
+\beta_0 + \beta_1 x_1 + \epsilon & x_2 = 0 \\
+\beta_0 + \beta_1 x_1 + \beta_2 + \epsilon & x_2 = 1
 \end{cases}
 $$
 This represents a *shift of the intercept*

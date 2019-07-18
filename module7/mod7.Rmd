@@ -209,7 +209,7 @@ $$
 \mathbf{0} & (\mathbf{X}_r^\intercal\mathbf{X}_r)^{-1}
 \end{bmatrix}
 $$
-and the two estimators are equivalent! A [general formula for the inverse of a block matrix](https://en.wikipedia.org/wiki/Block_matrix#Block_matrix_inversion) exists, but I find it hard to memorize. 
+and the two estimators are equivalent! This is a special case of the [general formula for the inverse of a block matrix that we saw earlier.](https://en.wikipedia.org/wiki/Block_matrix#Block_matrix_inversion) 
 
 
 ## Analyzing Misspecification

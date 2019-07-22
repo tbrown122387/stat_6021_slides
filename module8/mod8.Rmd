@@ -26,7 +26,7 @@ The number $\mathbf{H}_{j,i}$ is the *leverage* of obs. $i$ on fitted value $j$.
 In module 5 we discussed how "leverage" is related to distance form the center in $\mathbf{X}$-space:
 
 $$
-\mathbf{H}_{i,j} = \frac{1}{n}   + (\mathbf{x}_{i,-1} - \bar{\mathbf{x}}_{-1})^{\intercal}( \mathbf{S}^2)^{-1}(\mathbf{x}_{j,-1} - \bar{\mathbf{x}}_{-1}) /(n-1)
+\mathbf{H}_{i,j} = \frac{1}{n}   + \frac{(\mathbf{x}_{i,-1} - \bar{\mathbf{x}}_{-1})^{\intercal} \mathbf{S}^{-1}(\mathbf{x}_{j,-1} - \bar{\mathbf{x}}_{-1})}{n-1}
 $$
 where $\mathbf{S}$ is the matrix of sample variances/covariances (with $n-1$ in the denominator).
 

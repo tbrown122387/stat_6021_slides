@@ -368,9 +368,9 @@ Same condition as before!
 
 Most (all?) model selection criteria are based on the idea of minimizing *out-of-sample* error/loss/badness.
 
-Know the difference between the data used to estimate your model $\{y_i, \mathbf{x}_i \}_{i=1}^n$, and future/unseen data $\{y'_i\}_{i=1}^n$. 
+Know the difference between the data used to estimate your model $\{y_i, \mathbf{x}_i \}_{i=1}^n$, and a future/unseen data point $y'_i, \mathbf{x}^\intercal_i$. 
 
-The predictor data is assumed nonrandom, or if it isn't, then everything is conditoning on it.
+Once again, the predictor data is assumed nonrandom, or if it isn't, then everything is conditoning on it.
 
 ## Mallows' Cp
 
@@ -382,11 +382,11 @@ $$
 
 ### Note
 
-- This is *very different* in-sample mean square prediction error!
+- This is *very different* from in-sample mean square prediction error!
 
 - $\hat{\boldsymbol{\beta}}_p$ is from a particular model using $\mathbf{X}_p$ and $\mathbf{y}$
 
-- the expectation is taken with respect to everything that's random: $\{y_i\}$ and $\{y_i'\}$
+- the expectation is taken with respect to everything that's random: $\{y_i\}$ and $y_i'$
 
 ## Mallows' Cp 
 
@@ -495,7 +495,7 @@ $$
 E\left[-2 \sum_{i=1}^n \log \hat{p}(y_i') \right]
 $$
 
-Entropy is just the average surprise of your prediction:
+Entropy is just the average "surprise" of your prediction:
 
 - $\hat{p}( \cdot)$ is a probabilistic prediction model estimated on old data $\{y_i\}$. WLOG let's say it's a density.
 
@@ -503,7 +503,7 @@ Entropy is just the average surprise of your prediction:
 
 - this is equivalent to the negative twice the log of the density being low
 
-- the $y_i$s you're plugging in are random, so you take the average 
+- the $y_i'$s you're plugging in are random, so you take the average 
 
 - sometimes people *maximize* $E\left[\sum_{i=1}^n \log \hat{p}(y_i') \right]$
 

@@ -706,8 +706,8 @@ V[\hat{\boldsymbol{\beta}}^*_r] - \boldsymbol{\beta}_r\boldsymbol{\beta}_r^\inte
 <div id="model-selection-criteria" class="slide section level2">
 <h1>Model Selection Criteria</h1>
 <p>Most (all?) model selection criteria are based on the idea of minimizing <em>out-of-sample</em> error/loss/badness.</p>
-<p>Know the difference between the data used to estimate your model <span class="math inline">\(\{y_i, \mathbf{x}_i \}_{i=1}^n\)</span>, and future/unseen data <span class="math inline">\(\{y'_i\}_{i=1}^n\)</span>.</p>
-<p>The predictor data is assumed nonrandom, or if it isn’t, then everything is conditoning on it.</p>
+<p>Know the difference between the data used to estimate your model <span class="math inline">\(\{y_i, \mathbf{x}_i \}_{i=1}^n\)</span>, and a future/unseen data point <span class="math inline">\(y'_i, \mathbf{x}^\intercal_i\)</span>.</p>
+<p>Once again, the predictor data is assumed nonrandom, or if it isn’t, then everything is conditoning on it.</p>
 </div>
 <div id="mallows-cp" class="slide section level2">
 <h1>Mallows’ Cp</h1>
@@ -717,9 +717,9 @@ E[(y_i' - \mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}}_p )^2]
 \]</span></p>
 <h3 id="note">Note</h3>
 <ul>
-<li><p>This is <em>very different</em> in-sample mean square prediction error!</p></li>
+<li><p>This is <em>very different</em> from in-sample mean square prediction error!</p></li>
 <li><p><span class="math inline">\(\hat{\boldsymbol{\beta}}_p\)</span> is from a particular model using <span class="math inline">\(\mathbf{X}_p\)</span> and <span class="math inline">\(\mathbf{y}\)</span></p></li>
-<li><p>the expectation is taken with respect to everything that’s random: <span class="math inline">\(\{y_i\}\)</span> and <span class="math inline">\(\{y_i'\}\)</span></p></li>
+<li><p>the expectation is taken with respect to everything that’s random: <span class="math inline">\(\{y_i\}\)</span> and <span class="math inline">\(y_i'\)</span></p></li>
 </ul>
 </div>
 <div id="mallows-cp-1" class="slide section level2">
@@ -800,7 +800,7 @@ C_p := \frac{1}{n}\sum_{i=1}^n (y_i - \mathbf{x}_i^\intercal \hat{\boldsymbol{\b
 <p><span class="math display">\[
 E\left[-2 \sum_{i=1}^n \log \hat{p}(y_i') \right]
 \]</span></p>
-<p>Entropy is just the average surprise of your prediction:</p>
+<p>Entropy is just the average “surprise” of your prediction:</p>
 <ul>
 <li><p><span class="math inline">\(\hat{p}( \cdot)\)</span> is a probabilistic prediction model estimated on old data <span class="math inline">\(\{y_i\}\)</span>. WLOG let’s say it’s a density.</p></li>
 <li><p>you want to plug new values <span class="math inline">\(y_i'\)</span> into the density, and high densities are better (no surprises)</p></li>

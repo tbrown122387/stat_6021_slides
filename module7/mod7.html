@@ -805,7 +805,7 @@ E\left[-2 \sum_{i=1}^n \log \hat{p}(y_i') \right]
 <li><p><span class="math inline">\(\hat{p}( \cdot)\)</span> is a probabilistic prediction model estimated on old data <span class="math inline">\(\{y_i\}\)</span>. WLOG let’s say it’s a density.</p></li>
 <li><p>you want to plug new values <span class="math inline">\(y_i'\)</span> into the density, and high densities are better (no surprises)</p></li>
 <li><p>this is equivalent to the negative twice the log of the density being low</p></li>
-<li><p>the <span class="math inline">\(y_i\)</span>s you’re plugging in are random, so you take the average</p></li>
+<li><p>the <span class="math inline">\(y_i'\)</span>s you’re plugging in are random, so you take the average</p></li>
 <li><p>sometimes people <em>maximize</em> <span class="math inline">\(E\left[\sum_{i=1}^n \log \hat{p}(y_i') \right]\)</span></p></li>
 </ul>
 </div>
@@ -905,7 +905,7 @@ E\left[-2 \sum_{i=1}^n \log \hat{p}(y_i') \right]
 <p>For each absent predictor, estimate the model with this new predictor added. Add predictor with lowest p-value, only if it’s below a threshold.</p>
 <ul>
 <li><p>start with smallest model: <span class="math inline">\(y = \beta_0 + \epsilon\)</span></p></li>
-<li><p>p-values come from the third type of hypothesis test we talked about in module 3</p></li>
+<li><p>p-values come from the <span class="math inline">\(t\)</span>-test, which is the same as the partial <span class="math inline">\(F\)</span>-test when the bigger model has only one more predictor.</p></li>
 </ul>
 </div>
 <div id="forward-selection-1" class="slide section level2">

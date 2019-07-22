@@ -609,7 +609,7 @@ For each absent predictor, estimate the model with this new predictor added. Add
 
 - start with smallest model: $y = \beta_0 + \epsilon$
 
-- p-values come from the third type of hypothesis test we talked about in module 3
+- p-values come from the $t$-test, which is the same as the partial $F$-test when the bigger model has only one more predictor.
 
 ## Forward Selection
 

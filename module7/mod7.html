@@ -1536,7 +1536,7 @@ E\left[-2 \sum_{i=1}^n \log \hat{p}(y_i') \right]
 <p>The key is the <a href="https://en.wikipedia.org/wiki/Sherman%E2%80%93Morrison_formula">Sherman-Morrison formula</a>. <span class="math display">\[
 (\mathbf{X}_{(i)}^\intercal\mathbf{X}_{(i)})^{-1} = \left(\mathbf{X}^\intercal \mathbf{X} - \mathbf{x}_i\mathbf{x}_i^\intercal \right)^{-1} = (\mathbf{X}^\intercal \mathbf{X})^{-1} + \frac{ (\mathbf{X}^\intercal \mathbf{X})^{-1}\mathbf{x}_i \mathbf{x}_i^\intercal(\mathbf{X}^\intercal \mathbf{X})^{-1} }{1 - \mathbf{H}_{ii}}
 \]</span></p>
-<p>So, because <span class="math inline">\(\mathbf{X}_{(i)}\mathbf{y}_{(i)} = \mathbf{X}^\intercal\mathbf{y} - \overbrace{\mathbf{x}_i}^{\text{row i}} y_i\)</span>, <span class="math display">\[
+<p>So, because <span class="math inline">\(\mathbf{X}^\intercal_{(i)}\mathbf{y}_{(i)} = \mathbf{X}^\intercal\mathbf{y} - \overbrace{\mathbf{x}_i}^{\text{row i}} y_i\)</span>, <span class="math display">\[
 \hat{\boldsymbol{\beta}}_{(i)} = \hat{\boldsymbol{\beta}} - \frac{e_i (\mathbf{X}^\intercal\mathbf{X})^{-1}\mathbf{x}_i }{1-\mathbf{H}_{ii}}
 \]</span> leading us to get <span class="math display">\[
 y_i - \hat{y}_{(i)} = y_i - \mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}} + e_i \mathbf{x}_i^\intercal (\mathbf{X}^\intercal \mathbf{X})^{-1}\mathbf{x}_i/(1-\mathbf{H}_{ii}) =\left(\frac{e_i}{1 - \mathbf{H}_{ii} } \right)

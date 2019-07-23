@@ -740,7 +740,7 @@ $$
 (\mathbf{X}_{(i)}^\intercal\mathbf{X}_{(i)})^{-1} = \left(\mathbf{X}^\intercal \mathbf{X} - \mathbf{x}_i\mathbf{x}_i^\intercal \right)^{-1} = (\mathbf{X}^\intercal \mathbf{X})^{-1} + \frac{ (\mathbf{X}^\intercal \mathbf{X})^{-1}\mathbf{x}_i \mathbf{x}_i^\intercal(\mathbf{X}^\intercal \mathbf{X})^{-1} }{1 - \mathbf{H}_{ii}}
 $$
 
-So, because $\mathbf{X}_{(i)}\mathbf{y}_{(i)} = \mathbf{X}^\intercal\mathbf{y} - \overbrace{\mathbf{x}_i}^{\text{row i}} y_i$,
+So, because $\mathbf{X}^\intercal_{(i)}\mathbf{y}_{(i)} = \mathbf{X}^\intercal\mathbf{y} - \overbrace{\mathbf{x}_i}^{\text{row i}} y_i$,
 $$
 \hat{\boldsymbol{\beta}}_{(i)} = \hat{\boldsymbol{\beta}} - \frac{e_i (\mathbf{X}^\intercal\mathbf{X})^{-1}\mathbf{x}_i }{1-\mathbf{H}_{ii}}
 $$

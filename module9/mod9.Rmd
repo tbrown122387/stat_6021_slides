@@ -216,14 +216,14 @@ $$
 
 Subtracting (1) from (2)
 $$
-\log\left(\frac{ \tilde{\pi}}{1-\tilde{\pi}} \bigg/  \frac{\pi}{1-\pi} \right) = \beta_3 ( x_{3} - \tilde{x}_{3} ) 
+\log\left(\frac{ \tilde{\pi}}{1-\tilde{\pi}} \bigg/  \frac{\pi}{1-\pi} \right) = \beta_3 (\tilde{x}_{3}  - x_{3}) 
 $$
 
 
 ## Interpreting Estimates
 
 $$
-\log\left(\frac{ \tilde{\pi}}{1-\tilde{\pi}} \bigg/  \frac{\pi}{1-\pi} \right) = \beta_3 ( x_{3} - \tilde{x}_{3} ) 
+\log\left(\frac{ \tilde{\pi}}{1-\tilde{\pi}} \bigg/  \frac{\pi}{1-\pi} \right) = \beta_3 (\tilde{x}_{3}  - x_{3}) 
 $$
 
 For a one unit change in $x_3$, $\beta_3$ tells us the change in the log-odds, or the log odds ratio.
@@ -351,7 +351,7 @@ $$
 y_i = \frac{\exp[ \beta_i]}{( 1 + \exp[ \beta_i ] ) } = \text{invlogit}[\beta_i]
 $$
 
-or in other words each $\beta_i$ is plus or minus infinity (if $y_i$ is $1$ or $0$, respectively. Verify that the maximized log-likelihood is $0$!
+or in other words each $\beta_i$ is plus or minus infinity (if $y_i$ is $1$ or $0$, respectively). Verify that the maximized log-likelihood is $0$!
 
 ## Likelihood Ratio Tests (example 3)
 
@@ -523,7 +523,7 @@ $$
 
 So 
 $$
-2 \log\left(\frac{L(\text{saturated model})}{L(\text{null model})}\right) = 2 \log\left(\frac{L(\text{saturated model})}{L(\text{your model})}\right) - 2 \log \left( \frac{L(\text{your model})}{L(\text{null model})}\right)
+2 \log\left(\frac{L(\text{saturated model})}{L(\text{null model})}\right) = 2 \log\left(\frac{L(\text{saturated model})}{L(\text{your model})}\right) + 2 \log \left( \frac{L(\text{your model})}{L(\text{null model})}\right)
 $$
 
 kind of like $SS_T = SS_R + SS_{Res}$!

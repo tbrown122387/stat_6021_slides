@@ -599,13 +599,13 @@ L(\mathbf{y} ; \mathbf{X}, \boldsymbol{\beta}) = \prod_{i=1}^n f(y_i ; \mathbf{x
 \log\left( \frac{ \tilde{\pi}}{1-\tilde{\pi}} \right) = \beta_0 + \beta_1 x_{1} + \beta_2 x_{2} + \beta_3 \tilde{x}_{3} \tag{2}
 \]</span></p>
 <p>Subtracting (1) from (2) <span class="math display">\[
-\log\left(\frac{ \tilde{\pi}}{1-\tilde{\pi}} \bigg/  \frac{\pi}{1-\pi} \right) = \beta_3 ( x_{3} - \tilde{x}_{3} ) 
+\log\left(\frac{ \tilde{\pi}}{1-\tilde{\pi}} \bigg/  \frac{\pi}{1-\pi} \right) = \beta_3 (\tilde{x}_{3}  - x_{3}) 
 \]</span></p>
 </div>
 <div id="interpreting-estimates-2" class="slide section level2">
 <h1>Interpreting Estimates</h1>
 <p><span class="math display">\[
-\log\left(\frac{ \tilde{\pi}}{1-\tilde{\pi}} \bigg/  \frac{\pi}{1-\pi} \right) = \beta_3 ( x_{3} - \tilde{x}_{3} ) 
+\log\left(\frac{ \tilde{\pi}}{1-\tilde{\pi}} \bigg/  \frac{\pi}{1-\pi} \right) = \beta_3 (\tilde{x}_{3}  - x_{3}) 
 \]</span></p>
 <p>For a one unit change in <span class="math inline">\(x_3\)</span>, <span class="math inline">\(\beta_3\)</span> tells us the change in the log-odds, or the log odds ratio.</p>
 </div>
@@ -702,7 +702,7 @@ P(\chi^2_{\nu} \ge LR) &lt; \alpha.
 <p>which can only be true if for each observation <span class="math inline">\(i\)</span>: <span class="math display">\[
 y_i = \frac{\exp[ \beta_i]}{( 1 + \exp[ \beta_i ] ) } = \text{invlogit}[\beta_i]
 \]</span></p>
-<p>or in other words each <span class="math inline">\(\beta_i\)</span> is plus or minus infinity (if <span class="math inline">\(y_i\)</span> is <span class="math inline">\(1\)</span> or <span class="math inline">\(0\)</span>, respectively. Verify that the maximized log-likelihood is <span class="math inline">\(0\)</span>!</p>
+<p>or in other words each <span class="math inline">\(\beta_i\)</span> is plus or minus infinity (if <span class="math inline">\(y_i\)</span> is <span class="math inline">\(1\)</span> or <span class="math inline">\(0\)</span>, respectively). Verify that the maximized log-likelihood is <span class="math inline">\(0\)</span>!</p>
 </div>
 <div id="likelihood-ratio-tests-example-3" class="slide section level2">
 <h1>Likelihood Ratio Tests (example 3)</h1>
@@ -857,7 +857,7 @@ V\left[\hat{\boldsymbol{\beta}}  \right] \approx [-\mathbf{G}]^{-1}
 <li><p><strong>Residual deviance</strong>: <span class="math inline">\(2 \log\left( \frac{L(\text{saturated model})}{L(\text{your model}) }\right)\)</span></p></li>
 </ul>
 <p>So <span class="math display">\[
-2 \log\left(\frac{L(\text{saturated model})}{L(\text{null model})}\right) = 2 \log\left(\frac{L(\text{saturated model})}{L(\text{your model})}\right) - 2 \log \left( \frac{L(\text{your model})}{L(\text{null model})}\right)
+2 \log\left(\frac{L(\text{saturated model})}{L(\text{null model})}\right) = 2 \log\left(\frac{L(\text{saturated model})}{L(\text{your model})}\right) + 2 \log \left( \frac{L(\text{your model})}{L(\text{null model})}\right)
 \]</span></p>
 <p>kind of like <span class="math inline">\(SS_T = SS_R + SS_{Res}\)</span>!</p>
 </div>

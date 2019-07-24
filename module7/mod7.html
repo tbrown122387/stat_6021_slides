@@ -721,31 +721,31 @@ E[(y_i' - \mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}}_p )^2]
 <li><p><span class="math inline">\(\hat{\boldsymbol{\beta}}_p\)</span> is from a particular model using <span class="math inline">\(\mathbf{X}_p\)</span> and <span class="math inline">\(\mathbf{y}\)</span></p></li>
 <li><p>the expectation is taken with respect to everything that’s random: <span class="math inline">\(\{y_i\}\)</span> and <span class="math inline">\(y_i'\)</span></p></li>
 </ul>
+<!-- ## Mallows' Cp  -->
+<!-- Some tricks you will find useful in the next slide: -->
+<!-- For idempotent matrices $\mathbf{A}$,  -->
+<!-- $$ -->
+<!-- \text{tr}(\mathbf{A}) = \text{rank}(\mathbf{A}) -->
+<!-- $$ -->
+<!-- Proof: use the rank factorization $\mathbf{A} = \mathbf{C} \mathbf{F}$ -->
+<!-- $$ -->
+<!-- \mathbf{A}\mathbf{A} = \mathbf{A} \implies \mathbf{C} \mathbf{F}\mathbf{C} \mathbf{F} = \mathbf{C} \mathbf{F} \implies \mathbf{F}\mathbf{C}\mathbf{F} = \mathbf{F} \implies \mathbf{F}\mathbf{C} = \mathbf{I} -->
+<!-- $$ -->
+<!-- so  -->
+<!-- $$ -->
+<!-- \text{tr}(\mathbf{A}) = \text{tr}(\mathbf{C} \mathbf{F}) = \text{tr}(\mathbf{F}\mathbf{C}) = \text{rank}(\mathbf{A}) -->
+<!-- $$ -->
+<!-- ## Mallows' Cp  -->
+<!-- Another trick that helps with expectations of quadratic forms -->
+<!-- \begin{align*} -->
+<!-- E\left[\mathbf{y}^\intercal \mathbf{A} \mathbf{y}\right] &= E\left[\text{tr}(\mathbf{y}^\intercal \mathbf{A} \mathbf{y})\right] \\ -->
+<!-- &= E\left[\text{tr}( \mathbf{A} \mathbf{y}\mathbf{y}^\intercal)\right] \\ -->
+<!-- &= \text{tr}(E\left[ \mathbf{A} \mathbf{y}\mathbf{y}^\intercal\right] ) \\ -->
+<!-- &= \text{tr}( \mathbf{A} E\left[  \mathbf{y}\mathbf{y}^\intercal\right] ) \\ -->
+<!-- &= \text{tr}( \mathbf{A} V[\mathbf{y}] + \mathbf{A}(E\left[  \mathbf{y}\right])(E\left[  \mathbf{y}\right])^\intercal ) -->
+<!-- \end{align*} -->
 </div>
 <div id="mallows-cp-1" class="slide section level2">
-<h1>Mallows’ Cp</h1>
-<p>Some tricks you will find useful in the next slide:</p>
-<p>For idempotent matrices <span class="math inline">\(\mathbf{A}\)</span>, <span class="math display">\[
-\text{tr}(\mathbf{A}) = \text{rank}(\mathbf{A})
-\]</span></p>
-<p>Proof: use the rank factorization <span class="math inline">\(\mathbf{A} = \mathbf{C} \mathbf{F}\)</span> <span class="math display">\[
-\mathbf{A}\mathbf{A} = \mathbf{A} \implies \mathbf{C} \mathbf{F}\mathbf{C} \mathbf{F} = \mathbf{C} \mathbf{F} \implies \mathbf{F}\mathbf{C}\mathbf{F} = \mathbf{F} \implies \mathbf{F}\mathbf{C} = \mathbf{I}
-\]</span> so <span class="math display">\[
-\text{tr}(\mathbf{A}) = \text{tr}(\mathbf{C} \mathbf{F}) = \text{tr}(\mathbf{F}\mathbf{C}) = \text{rank}(\mathbf{A})
-\]</span></p>
-</div>
-<div id="mallows-cp-2" class="slide section level2">
-<h1>Mallows’ Cp</h1>
-<p>Another trick that helps with expectations of quadratic forms</p>
-<p><span class="math display">\[\begin{align*}
-E\left[\mathbf{y}^\intercal \mathbf{A} \mathbf{y}\right] &amp;= E\left[\text{tr}(\mathbf{y}^\intercal \mathbf{A} \mathbf{y})\right] \\
-&amp;= E\left[\text{tr}( \mathbf{A} \mathbf{y}\mathbf{y}^\intercal)\right] \\
-&amp;= \text{tr}(E\left[ \mathbf{A} \mathbf{y}\mathbf{y}^\intercal\right] ) \\
-&amp;= \text{tr}( \mathbf{A} E\left[  \mathbf{y}\mathbf{y}^\intercal\right] ) \\
-&amp;= \text{tr}( \mathbf{A} V[\mathbf{y}] + \mathbf{A}(E\left[  \mathbf{y}\right])(E\left[  \mathbf{y}\right])^\intercal )
-\end{align*}\]</span></p>
-</div>
-<div id="mallows-cp-3" class="slide section level2">
 <h1>Mallows’ Cp</h1>
 <p>In-sample MSPE: <span class="math display">\[\begin{align*}
 E[(y_i - \mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}}_p )^2] &amp;= 
@@ -761,7 +761,7 @@ V[y_i' - \mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}}_p] + \left(E[y_i' - \ma
 &amp;= E[(y_i - \mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}}_p )^2] + 2 \text{Cov}\left(y_i, \mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}}_p \right) \tag{above.}
 \end{align*}\]</span></p>
 </div>
-<div id="mallows-cp-4" class="slide section level2">
+<div id="mallows-cp-2" class="slide section level2">
 <h1>Mallows’ Cp</h1>
 <p>So <span class="math display">\[
 E[(y_i' - \mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}}_p )^2] = E[(y_i - \mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}}_p )^2] + 2 \text{Cov}\left(y_i, \mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}}_p \right)
@@ -776,7 +776,7 @@ E \left[ \frac{1}{n}\sum_{i=1}^n (y_i' - \mathbf{x}_i^\intercal \hat{\boldsymbol
 \]</span></p>
 <p>because <span class="math inline">\(\text{Cov}\left(y_i, \mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}}_p \right) = \sigma^2 \mathbf{H}_{ii}\)</span> and because <span class="math inline">\(\text{tr}(\mathbf{H}) = p\)</span></p>
 </div>
-<div id="mallows-cp-5" class="slide section level2">
+<div id="mallows-cp-3" class="slide section level2">
 <h1>Mallows’ Cp</h1>
 <p>Based on <span class="math display">\[
 E \left[ \frac{1}{n}\sum_{i=1}^n (y_i' - \mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}}_p )^2\right] = \underbrace{E\left[\frac{1}{n}\sum_{i=1}^n (y_i - \mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}}_p )^2\right]}_{\text{in-sample average error}} + \underbrace{ 2 \frac{\sigma^2}{n}p}_{\text{penalty}}
@@ -786,7 +786,7 @@ C_p := \frac{1}{n}\sum_{i=1}^n (y_i - \mathbf{x}_i^\intercal \hat{\boldsymbol{\b
 \]</span></p>
 <p>where <span class="math inline">\(\hat{\sigma}^2_{\text{full}}\)</span> is from the largest possible model (it’s unbiased assuming the true model’s predictors are contained in the full model). So, <em>pick the model with the smallest!</em></p>
 </div>
-<div id="mallows-cp-6" class="slide section level2">
+<div id="mallows-cp-4" class="slide section level2">
 <h1>Mallows’ Cp</h1>
 <p>Alternatively, sometimes people divide through by <span class="math inline">\(\hat{\sigma}^2_{\text{full}}/n\)</span> and then subtract <span class="math inline">\(n\)</span>: <span class="math display">\[
 \frac{1}{\hat{\sigma}^2_{\text{full}}}\sum_{i=1}^n (y_i - \mathbf{x}_i^\intercal \hat{\boldsymbol{\beta}}_p )^2 + 2p - n = \frac{SS_{Res}(p) }{\hat{\sigma}^2_{\text{full}}} + 2p - n
@@ -815,9 +815,10 @@ E\left[-2 \sum_{i=1}^n \log \hat{p}(y_i') \right]
 \text{AIC} &amp;:= - 2 \log(L) + 2p \\
 &amp;= n  \log\left(\frac{SS_{Res}}{n} \right) + 2p
 \end{align*}\]</span></p>
-<p>where <span class="math display">\[
-\log L = -\frac{n}{2}\log(2\pi) - \frac{n}{2}\log(\hat{\sigma}^2 ) - \frac{1}{2 \hat{\sigma}^2}\sum_{i=1}^n \left( y_i - \mathbf{x}^\intercal \hat{\boldsymbol{\beta}}_p \right)^2 = \underbrace{-\frac{n}{2}(\log(2\pi) +1)}_{\text{often ignored}}- \frac{n}{2}\log\left(\frac{SS_{Res}}{n} \right) 
-\]</span> is the normal density with the maximum likelihood estimates plugged in. Recall <span class="math inline">\(\hat{\sigma}^2 = SS_{Res}/n\)</span>, the MLE, is different from MSE because of the denominator.</p>
+<p>where <span class="math display">\[\begin{align*}
+\log L &amp;= -\frac{n}{2}\log(2\pi) - \frac{n}{2}\log(\hat{\sigma}^2 ) - \frac{1}{2 \hat{\sigma}^2}\sum_{i=1}^n \left( y_i - \mathbf{x}^\intercal \hat{\boldsymbol{\beta}}_p \right)^2 \\
+&amp;= \underbrace{-\frac{n}{2}(\log(2\pi) +1)}_{\text{often ignored}}- \frac{n}{2}\log\left(\frac{SS_{Res}}{n} \right) 
+\end{align*}\]</span> is the normal density with the maximum likelihood estimates plugged in. Recall <span class="math inline">\(\hat{\sigma}^2 = SS_{Res}/n\)</span>, the MLE, is different from MSE because of the denominator.</p>
 </div>
 <div id="honorable-mentions" class="slide section level2">
 <h1>Honorable mentions</h1>

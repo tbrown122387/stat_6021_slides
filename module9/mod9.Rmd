@@ -97,7 +97,7 @@ plot(xs, inv.logit(xs), type ="l", xlab = "x", ylab = "invlogit(x)")
 As the names suggest, they are inverses of each other:
 
 $$
-\text{invlogit}[\text{logit}(p)] = \frac{ 1 }{1 -(1-p)/p} = p 
+\text{invlogit}[\text{logit}(p)] = \frac{ 1 }{1 +(1-p)/p} = p 
 $$
 
 Also, note that 
@@ -148,7 +148,7 @@ Now the log-likelihood from $L(\mathbf{y} ; \mathbf{X}, \boldsymbol{\beta}) = \p
 Now take the derivatives of $\ell(\boldsymbol{\beta}) = \log L(\mathbf{y} ; \mathbf{X}, \boldsymbol{\beta}) = \sum_{i=1}^n y_i \mathbf{x}_i^\intercal \boldsymbol{\beta} - \log( 1 + \exp[ \mathbf{x}_i^\intercal \boldsymbol{\beta}])$
 
 $$
-\nabla \ell(\boldsymbol{\beta}) = \sum_{i=1}^n y_i \mathbf{x}_i - \frac{1}{( 1 + \exp[ \mathbf{x}_i^\intercal \boldsymbol{\beta}] ) }\mathbf{x}_i  \overset{\text{set}}{=} \mathbf{0}
+\nabla \ell(\boldsymbol{\beta}) = \sum_{i=1}^n y_i \mathbf{x}_i - \frac{\exp[ \mathbf{x}_i^\intercal \boldsymbol{\beta}]}{( 1 + \exp[ \mathbf{x}_i^\intercal \boldsymbol{\beta}] ) }\mathbf{x}_i  \overset{\text{set}}{=} \mathbf{0}
 $$
 
 - No way to solve for $\boldsymbol{\beta}$
@@ -328,7 +328,7 @@ $$
 
 And then we solve the same equation we mentioned before:
 $$
-\nabla \ell(\boldsymbol{\beta}) = \sum_{i=1}^n y_i \mathbf{x}_i - \frac{1}{( 1 + \exp[ \mathbf{x}_i^\intercal \boldsymbol{\beta}] ) }\mathbf{x}_i  \overset{\text{set}}{=} \mathbf{0}
+\nabla \ell(\boldsymbol{\beta}) = \sum_{i=1}^n y_i \mathbf{x}_i - \frac{\exp[ \mathbf{x}_i^\intercal \boldsymbol{\beta}]}{( 1 + \exp[ \mathbf{x}_i^\intercal \boldsymbol{\beta}] ) }\mathbf{x}_i  \overset{\text{set}}{=} \mathbf{0}
 $$
 
 
@@ -338,17 +338,17 @@ $$
 Note $\mathbf{x}_i^\intercal \boldsymbol{\beta} = \beta_i$. We must solve the following
 
 $$
-\nabla \ell(\boldsymbol{\beta}) = \sum_{i=1}^n y_i \mathbf{x}_i - \frac{1}{( 1 + \exp[ \mathbf{x}_i^\intercal \boldsymbol{\beta}] ) }\mathbf{x}_i  \overset{\text{set}}{=} \mathbf{0}.
+\nabla \ell(\boldsymbol{\beta}) = \sum_{i=1}^n y_i \mathbf{x}_i - \frac{\exp[ \mathbf{x}_i^\intercal \boldsymbol{\beta}]}{( 1 + \exp[ \mathbf{x}_i^\intercal \boldsymbol{\beta}] ) }\mathbf{x}_i  \overset{\text{set}}{=} \mathbf{0}.
 $$
 looking at $\beta_j$:
 $$
-\sum_{i=1}^n y_i x_{i,j} = \sum_{i=1}^n\frac{1}{( 1 + \exp[ \mathbf{x}_i^\intercal \boldsymbol{\beta}] ) }x_{i,j}  
+\sum_{i=1}^n y_i x_{i,j} = \sum_{i=1}^n\frac{\exp[ \mathbf{x}_i^\intercal \boldsymbol{\beta}]}{( 1 + \exp[ \mathbf{x}_i^\intercal \boldsymbol{\beta}] ) }x_{i,j}  
 $$
 
 
 which can only be true if for each observation $i$:
 $$
-y_i = \frac{1}{( 1 + \exp[ \beta_i ] ) }
+y_i = \frac{\exp[ \beta_i]}{( 1 + \exp[ \beta_i ] ) } = \text{invlogit}[\beta_i]
 $$
 
 or in other words each $\beta_i$ is plus or minus infinity (if $y_i$ is $1$ or $0$, respectively. Verify that the maximized log-likelihood is $0$!
@@ -452,20 +452,20 @@ Why does the book write $-\mathbf{G}^{-1} = -[\nabla^2 \ell( \hat{\boldsymbol{\b
 Recall
 
 $$
-\nabla \ell(\boldsymbol{\beta}) = \sum_{i=1}^n y_i \mathbf{x}_i - \frac{1}{( 1 + \exp[ \mathbf{x}_i^\intercal \boldsymbol{\beta}] )) }\mathbf{x}_i 
+\nabla \ell(\boldsymbol{\beta}) = \sum_{i=1}^n y_i \mathbf{x}_i - \frac{\exp[ \mathbf{x}_i^\intercal \boldsymbol{\beta}]}{( 1 + \exp[ \mathbf{x}_i^\intercal \boldsymbol{\beta}] )) }\mathbf{x}_i 
 $$
 
 So
 \begin{align*}
 \nabla^2 \ell( \hat{\boldsymbol{\beta}} )
 &= 
-\sum_{i=1}^n \frac{\exp[ \mathbf{x}_i^\intercal  \hat{\boldsymbol{\beta}}  ] }{( 1 + \exp[ \mathbf{x}_i^\intercal  \hat{\boldsymbol{\beta}} ] )^2 }\mathbf{x}_i\mathbf{x}_i^\intercal  \\
+\sum_{i=1}^n \frac{\exp[ -\mathbf{x}_i^\intercal  \hat{\boldsymbol{\beta}}  ] }{( 1 + \exp[- \mathbf{x}_i^\intercal  \hat{\boldsymbol{\beta}} ] )^2 }\mathbf{x}_i\mathbf{x}_i^\intercal  \\
 &=
 \mathbf{X}^\intercal
 \begin{bmatrix}
-\frac{\exp[ \mathbf{x}_1^\intercal  \hat{\boldsymbol{\beta}}  ] }{( 1 + \exp[ \mathbf{x}_1^\intercal \hat{\boldsymbol{\beta}}  ] )^2} &  \cdots & 0\\
+\frac{\exp[ -\mathbf{x}_1^\intercal  \hat{\boldsymbol{\beta}}  ] }{( 1 + \exp[- \mathbf{x}_1^\intercal \hat{\boldsymbol{\beta}}  ] )^2} &  \cdots & 0\\
 \vdots & \ddots & \vdots \\
-0 & \cdots & \frac{\exp[ \mathbf{x}_n^\intercal  \hat{\boldsymbol{\beta}} ] }{( 1 + \exp[ \mathbf{x}_n^\intercal  \hat{\boldsymbol{\beta}}  ] )^2}
+0 & \cdots & \frac{\exp[ -\mathbf{x}_n^\intercal  \hat{\boldsymbol{\beta}} ] }{( 1 + \exp[- \mathbf{x}_n^\intercal  \hat{\boldsymbol{\beta}}  ] )^2}
 \end{bmatrix}
 \mathbf{X} \\
 \end{align*}

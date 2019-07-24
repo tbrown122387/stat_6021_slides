@@ -388,35 +388,35 @@ $$
 
 - the expectation is taken with respect to everything that's random: $\{y_i\}$ and $y_i'$
 
-## Mallows' Cp 
+<!-- ## Mallows' Cp  -->
 
-Some tricks you will find useful in the next slide:
+<!-- Some tricks you will find useful in the next slide: -->
 
-For idempotent matrices $\mathbf{A}$, 
-$$
-\text{tr}(\mathbf{A}) = \text{rank}(\mathbf{A})
-$$
+<!-- For idempotent matrices $\mathbf{A}$,  -->
+<!-- $$ -->
+<!-- \text{tr}(\mathbf{A}) = \text{rank}(\mathbf{A}) -->
+<!-- $$ -->
 
-Proof: use the rank factorization $\mathbf{A} = \mathbf{C} \mathbf{F}$
-$$
-\mathbf{A}\mathbf{A} = \mathbf{A} \implies \mathbf{C} \mathbf{F}\mathbf{C} \mathbf{F} = \mathbf{C} \mathbf{F} \implies \mathbf{F}\mathbf{C}\mathbf{F} = \mathbf{F} \implies \mathbf{F}\mathbf{C} = \mathbf{I}
-$$
-so 
-$$
-\text{tr}(\mathbf{A}) = \text{tr}(\mathbf{C} \mathbf{F}) = \text{tr}(\mathbf{F}\mathbf{C}) = \text{rank}(\mathbf{A})
-$$
+<!-- Proof: use the rank factorization $\mathbf{A} = \mathbf{C} \mathbf{F}$ -->
+<!-- $$ -->
+<!-- \mathbf{A}\mathbf{A} = \mathbf{A} \implies \mathbf{C} \mathbf{F}\mathbf{C} \mathbf{F} = \mathbf{C} \mathbf{F} \implies \mathbf{F}\mathbf{C}\mathbf{F} = \mathbf{F} \implies \mathbf{F}\mathbf{C} = \mathbf{I} -->
+<!-- $$ -->
+<!-- so  -->
+<!-- $$ -->
+<!-- \text{tr}(\mathbf{A}) = \text{tr}(\mathbf{C} \mathbf{F}) = \text{tr}(\mathbf{F}\mathbf{C}) = \text{rank}(\mathbf{A}) -->
+<!-- $$ -->
 
-## Mallows' Cp 
+<!-- ## Mallows' Cp  -->
 
-Another trick that helps with expectations of quadratic forms
+<!-- Another trick that helps with expectations of quadratic forms -->
 
-\begin{align*}
-E\left[\mathbf{y}^\intercal \mathbf{A} \mathbf{y}\right] &= E\left[\text{tr}(\mathbf{y}^\intercal \mathbf{A} \mathbf{y})\right] \\
-&= E\left[\text{tr}( \mathbf{A} \mathbf{y}\mathbf{y}^\intercal)\right] \\
-&= \text{tr}(E\left[ \mathbf{A} \mathbf{y}\mathbf{y}^\intercal\right] ) \\
-&= \text{tr}( \mathbf{A} E\left[  \mathbf{y}\mathbf{y}^\intercal\right] ) \\
-&= \text{tr}( \mathbf{A} V[\mathbf{y}] + \mathbf{A}(E\left[  \mathbf{y}\right])(E\left[  \mathbf{y}\right])^\intercal )
-\end{align*}
+<!-- \begin{align*} -->
+<!-- E\left[\mathbf{y}^\intercal \mathbf{A} \mathbf{y}\right] &= E\left[\text{tr}(\mathbf{y}^\intercal \mathbf{A} \mathbf{y})\right] \\ -->
+<!-- &= E\left[\text{tr}( \mathbf{A} \mathbf{y}\mathbf{y}^\intercal)\right] \\ -->
+<!-- &= \text{tr}(E\left[ \mathbf{A} \mathbf{y}\mathbf{y}^\intercal\right] ) \\ -->
+<!-- &= \text{tr}( \mathbf{A} E\left[  \mathbf{y}\mathbf{y}^\intercal\right] ) \\ -->
+<!-- &= \text{tr}( \mathbf{A} V[\mathbf{y}] + \mathbf{A}(E\left[  \mathbf{y}\right])(E\left[  \mathbf{y}\right])^\intercal ) -->
+<!-- \end{align*} -->
 
 
 ## Mallows' Cp
@@ -518,9 +518,10 @@ For a particular model with $p$ columns in the design matrix
 
 
 where 
-$$
-\log L = -\frac{n}{2}\log(2\pi) - \frac{n}{2}\log(\hat{\sigma}^2 ) - \frac{1}{2 \hat{\sigma}^2}\sum_{i=1}^n \left( y_i - \mathbf{x}^\intercal \hat{\boldsymbol{\beta}}_p \right)^2 = \underbrace{-\frac{n}{2}(\log(2\pi) +1)}_{\text{often ignored}}- \frac{n}{2}\log\left(\frac{SS_{Res}}{n} \right) 
-$$
+\begin{align*}
+\log L &= -\frac{n}{2}\log(2\pi) - \frac{n}{2}\log(\hat{\sigma}^2 ) - \frac{1}{2 \hat{\sigma}^2}\sum_{i=1}^n \left( y_i - \mathbf{x}^\intercal \hat{\boldsymbol{\beta}}_p \right)^2 \\
+&= \underbrace{-\frac{n}{2}(\log(2\pi) +1)}_{\text{often ignored}}- \frac{n}{2}\log\left(\frac{SS_{Res}}{n} \right) 
+\end{align*}
 is the normal density with the maximum likelihood estimates plugged in. Recall $\hat{\sigma}^2 = SS_{Res}/n$, the MLE, is different from MSE because of the denominator.
 
 ## Honorable mentions

@@ -105,8 +105,8 @@ The way to fix this is to constrain the parameters. Fixing one of them will lead
 
 There are two common choices:
 
-- set $\mathbf{c} = \boldsymbol{\beta}^0$, which means $\boldsymbol{\beta}^0 = \mathbf{0}$ (we and the book will do this), and
-- set $\mathbf{c} = \boldsymbol{\beta}^{m}$, which means $\boldsymbol{\beta}^{m} = \mathbf{0}$.
+- set $\mathbf{c} = \hat{\boldsymbol{\beta}}^0$, which means $\boldsymbol{\beta}^0 = \mathbf{0}$ (we and the book will do this), and
+- set $\mathbf{c} = \hat{\boldsymbol{\beta}}^{m}$, which means $\boldsymbol{\beta}^{m} = \mathbf{0}$.
 
 
 ## Example 1

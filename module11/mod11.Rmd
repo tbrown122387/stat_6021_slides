@@ -89,7 +89,7 @@ Correlation within a time series is usually referred to as **autocorrelation** (
 If you take a [time series course](https://github.com/tbrown122387/stat_4170_slides), you'll learn about the **autocorrelation function** $\rho_{\epsilon} : \mathbb{Z} \to [-1,1]$
 
 $$
-\rho_{\epsilon}(h) = \text{Corr}\left(\epsilon_t, \epsilon_{t+h} \right) = \frac{\text{Corr}\left(\epsilon_t, \epsilon_{t+h} \right) }{\text{V}(\epsilon_t)}
+\rho_{\epsilon}(h) = \text{Corr}\left(\epsilon_t, \epsilon_{t+h} \right) = \frac{\text{Cov}\left(\epsilon_t, \epsilon_{t+h} \right) }{\text{V}(\epsilon_t)}
 $$
 where $h$ is the "lag."
 
@@ -99,7 +99,7 @@ This definition only works for **stationary** processes. Where are the places wh
 ## Correlated Errors
 
 
-Every stationary time series has an autocorrelation function. The process that we will be using a lot is called an **autoregressive process** of order $1$:
+Every stationary time series has an autocorrelation function. The process that we will be using a lot is called an **autoregressive process** of order $1$ (called AR(1) for short):
 
 \begin{gather}
 \epsilon_t = \phi \epsilon_{t-1} + a_t \\
@@ -108,7 +108,7 @@ Every stationary time series has an autocorrelation function. The process that w
 where $a_t$ are iid normal with mean $0$ and variance $\sigma^2_a$.
 
 
-Notice that $-1 < \phi < 1$, otherwise the variance could be negative or infinite!
+Notice that $-1 < \phi < 1$, otherwise the process will not be stationary
 
 
 ## Correlated Errors
@@ -310,7 +310,7 @@ plot(residuals(corrErrorMod)) #these look better
 ## using `R`
 
 ```{r}
-summary(corrErrorMod)
+summary(corrErrorMod) # :( 
 corrErrorMod$coef # phi, beta0, beta1
 summary(lm(y ~ x)) # estimates are pretty close to simple ols model
 ```

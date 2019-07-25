@@ -412,7 +412,7 @@ $$
 V\left[\hat{\boldsymbol{\beta}}  \right] \approx [-\mathbf{G}]^{-1}
 $$
 
-- $\ell( \hat{\boldsymbol{\beta}} )$ is the log-likelihood with the MLE plugged in
+- $\ell(\hat{\boldsymbol{\beta}}) = \log L( \hat{\boldsymbol{\beta}} )$ is the log-likelihood with the MLE plugged in
 
 - $\mathbf{G}_{ij} = \frac{\partial^2 \log L(\hat{\boldsymbol{\beta}})}{\partial \beta_i \partial \beta_j}$ is the **Hessian matrix**
 

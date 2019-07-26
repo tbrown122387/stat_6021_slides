@@ -228,7 +228,7 @@ Say we have identified the problem, and now we must fit the following model:
 
 
 \begin{gather}
-y_i = \mathbf{x}_i^\intercal \boldsymbol{\beta} + \epsilon_i \\
+y_t = \mathbf{x}_t^\intercal \boldsymbol{\beta} + \epsilon_t \\
 \epsilon_t = \phi \epsilon_{t-1} + a_t \\
 \epsilon_1 \sim N\left(0, \frac{\sigma^2_a}{1-\phi^2} \right)
 \end{gather}

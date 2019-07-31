@@ -229,6 +229,7 @@ $$
 For a one unit change in $x_3$, $\beta_3$ tells us the change in the log-odds, or the log odds ratio.
 
 
+
 ## Hypothesis Testing with GLMs
 
 We now learn about how to test parameters. 
@@ -286,7 +287,7 @@ $$
 
 ## Likelihood Ratio Tests (example 1)
 
-The **null model**:
+The **null model** (which is also the null hypothesis **in this case** because it's smaller):
 
 $$
 \text{logit}(\pi_i) = \beta_0 
@@ -307,9 +308,24 @@ anova(reducedMod, fullMod) # remember: models must be "nested"
 
 ## Likelihood Ratio Tests (example 2)
 
-A **goodness-of-fit** test uses the same methodology to test your chosen model, which is assumed true under the null hypothesis, against a **saturated model**.
+A **goodness-of-fit** test uses the same methodology to test your chosen model:
 
-To find the saturated model, we give each row it's own coefficent. So $\boldsymbol{\beta} \in \mathbb{R}^n$ and the design matrix is
+$$
+\text{logit}(\pi_i) = \beta_0 + \beta_1x_{i1} + \cdots + \beta_k x_{ik},
+$$
+which is assumed true under the null hypothesis, against a **saturated model**:
+
+$$
+\text{logit}(\pi_i) = \beta_i
+$$
+
+This is subtle...each row gets its very own parameter. 
+
+## Likelihood Ratio Tests (example 2)
+
+
+
+Each row gets its own coefficent, so $\boldsymbol{\beta} \in \mathbb{R}^n$ and the design matrix is
 $$
 \mathbf{X}\boldsymbol{\beta} = 
 \begin{bmatrix}
@@ -351,7 +367,16 @@ $$
 y_i = \frac{\exp[ \beta_i]}{( 1 + \exp[ \beta_i ] ) } = \text{invlogit}[\beta_i]
 $$
 
-or in other words each $\beta_i$ is plus or minus infinity (if $y_i$ is $1$ or $0$, respectively). Verify that the maximized log-likelihood is $0$!
+or in other words each $\beta_i$ is plus or minus infinity (if $y_i$ is $1$ or $0$, respectively). 
+
+## Likelihood Ratio Tests (example 2)
+
+A **goodness-of-fit** test uses the following test statistic:
+
+$$
+2 \log\left( \frac{L(\text{saturated model})}{L( \text{model} ) } \right)
+$$
+This has a special name: the *residual deviance*. This will be discussed in a few slides!
 
 ## Likelihood Ratio Tests (example 3)
 
@@ -376,6 +401,8 @@ Again, under the null
 $$
 LR = 2 \log\left( \frac{L(FM)}{L(RM) } \right)\overset{\text{approx.}}{\sim} \chi^2_{\nu}
 $$
+and here $\nu = r$
+
 
 ## Likelihood Ratio Tests (example 3)
 
@@ -493,7 +520,7 @@ summary(fullMod)
 
 ## So many deviances!
 
-Why is there a **null deviance**, and a **residual deviance**?
+Why was there a **null deviance**, and a **residual deviance**?
 
 This is related to what we had with regular linear regression:
 $$

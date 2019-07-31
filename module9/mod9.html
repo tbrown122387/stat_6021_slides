@@ -648,7 +648,7 @@ P(\chi^2_{\nu} \ge LR) &lt; \alpha.
 </div>
 <div id="likelihood-ratio-tests-example-1" class="slide section level2">
 <h1>Likelihood Ratio Tests (example 1)</h1>
-<p>The <strong>null model</strong>:</p>
+<p>The <strong>null model</strong> (which is also the null hypothesis <strong>in this case</strong> because it’s smaller):</p>
 <p><span class="math display">\[
 \text{logit}(\pi_i) = \beta_0 
 \]</span></p>
@@ -671,8 +671,18 @@ P(\chi^2_{\nu} \ge LR) &lt; \alpha.
 </div>
 <div id="likelihood-ratio-tests-example-2" class="slide section level2">
 <h1>Likelihood Ratio Tests (example 2)</h1>
-<p>A <strong>goodness-of-fit</strong> test uses the same methodology to test your chosen model, which is assumed true under the null hypothesis, against a <strong>saturated model</strong>.</p>
-<p>To find the saturated model, we give each row it’s own coefficent. So <span class="math inline">\(\boldsymbol{\beta} \in \mathbb{R}^n\)</span> and the design matrix is <span class="math display">\[
+<p>A <strong>goodness-of-fit</strong> test uses the same methodology to test your chosen model:</p>
+<p><span class="math display">\[
+\text{logit}(\pi_i) = \beta_0 + \beta_1x_{i1} + \cdots + \beta_k x_{ik},
+\]</span> which is assumed true under the null hypothesis, against a <strong>saturated model</strong>:</p>
+<p><span class="math display">\[
+\text{logit}(\pi_i) = \beta_i
+\]</span></p>
+<p>This is subtle…each row gets its very own parameter.</p>
+</div>
+<div id="likelihood-ratio-tests-example-2-1" class="slide section level2">
+<h1>Likelihood Ratio Tests (example 2)</h1>
+<p>Each row gets its own coefficent, so <span class="math inline">\(\boldsymbol{\beta} \in \mathbb{R}^n\)</span> and the design matrix is <span class="math display">\[
 \mathbf{X}\boldsymbol{\beta} = 
 \begin{bmatrix}
 1 &amp; 0 &amp; \cdots &amp; 0\\
@@ -691,7 +701,7 @@ P(\chi^2_{\nu} \ge LR) &lt; \alpha.
 \nabla \ell(\boldsymbol{\beta}) = \sum_{i=1}^n y_i \mathbf{x}_i - \frac{\exp[ \mathbf{x}_i^\intercal \boldsymbol{\beta}]}{( 1 + \exp[ \mathbf{x}_i^\intercal \boldsymbol{\beta}] ) }\mathbf{x}_i  \overset{\text{set}}{=} \mathbf{0}
 \]</span></p>
 </div>
-<div id="likelihood-ratio-tests-example-2-1" class="slide section level2">
+<div id="likelihood-ratio-tests-example-2-2" class="slide section level2">
 <h1>Likelihood Ratio Tests (example 2)</h1>
 <p>Note <span class="math inline">\(\mathbf{x}_i^\intercal \boldsymbol{\beta} = \beta_i\)</span>. We must solve the following</p>
 <p><span class="math display">\[
@@ -702,7 +712,14 @@ P(\chi^2_{\nu} \ge LR) &lt; \alpha.
 <p>which can only be true if for each observation <span class="math inline">\(i\)</span>: <span class="math display">\[
 y_i = \frac{\exp[ \beta_i]}{( 1 + \exp[ \beta_i ] ) } = \text{invlogit}[\beta_i]
 \]</span></p>
-<p>or in other words each <span class="math inline">\(\beta_i\)</span> is plus or minus infinity (if <span class="math inline">\(y_i\)</span> is <span class="math inline">\(1\)</span> or <span class="math inline">\(0\)</span>, respectively). Verify that the maximized log-likelihood is <span class="math inline">\(0\)</span>!</p>
+<p>or in other words each <span class="math inline">\(\beta_i\)</span> is plus or minus infinity (if <span class="math inline">\(y_i\)</span> is <span class="math inline">\(1\)</span> or <span class="math inline">\(0\)</span>, respectively).</p>
+</div>
+<div id="likelihood-ratio-tests-example-2-3" class="slide section level2">
+<h1>Likelihood Ratio Tests (example 2)</h1>
+<p>A <strong>goodness-of-fit</strong> test uses the following test statistic:</p>
+<p><span class="math display">\[
+2 \log\left( \frac{L(\text{saturated model})}{L( \text{model} ) } \right)
+\]</span> This has a special name: the <em>residual deviance</em>. This will be discussed in a few slides!</p>
 </div>
 <div id="likelihood-ratio-tests-example-3" class="slide section level2">
 <h1>Likelihood Ratio Tests (example 3)</h1>
@@ -719,7 +736,7 @@ H_a: \boldsymbol{\beta}_2 \neq \mathbf{0}
 \]</span></p>
 <p>Again, under the null <span class="math display">\[
 LR = 2 \log\left( \frac{L(FM)}{L(RM) } \right)\overset{\text{approx.}}{\sim} \chi^2_{\nu}
-\]</span></p>
+\]</span> and here <span class="math inline">\(\nu = r\)</span></p>
 </div>
 <div id="likelihood-ratio-tests-example-3-1" class="slide section level2">
 <h1>Likelihood Ratio Tests (example 3)</h1>
@@ -836,7 +853,7 @@ V\left[\hat{\boldsymbol{\beta}}  \right] \approx [-\mathbf{G}]^{-1}
 </div>
 <div id="so-many-deviances" class="slide section level2">
 <h1>So many deviances!</h1>
-<p>Why is there a <strong>null deviance</strong>, and a <strong>residual deviance</strong>?</p>
+<p>Why was there a <strong>null deviance</strong>, and a <strong>residual deviance</strong>?</p>
 <p>This is related to what we had with regular linear regression: <span class="math display">\[
 \sum_{i=1}^n(y_i - \bar{y})^2 = \sum_{i=1}^n(y_i - \hat{y}_i)^2 + \sum_{i=1}^n(\hat{y}_i - \bar{y})^2?
 \]</span></p>
